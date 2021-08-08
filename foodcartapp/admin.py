@@ -3,7 +3,7 @@ from django.shortcuts import reverse
 from django.templatetags.static import static
 from django.utils.html import format_html
 
-from .models import Product
+from .models import Product, Order, ProductInOrder
 from .models import ProductCategory
 from .models import Restaurant
 from .models import RestaurantMenuItem
@@ -104,3 +104,14 @@ class ProductAdmin(admin.ModelAdmin):
 @admin.register(ProductCategory)
 class ProductAdmin(admin.ModelAdmin):
     pass
+
+
+class ProductInOrderInline(admin.TabularInline):
+    model = ProductInOrder
+
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    inlines = [
+        ProductInOrderInline,
+    ]
