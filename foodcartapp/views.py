@@ -5,7 +5,7 @@ from django.templatetags.static import static
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from .models import Product, Order, ProductInOrder
+from foodcartapp.models import Product, Order, ProductInOrder
 from .serializer import OrderSerializer
 
 
@@ -66,7 +66,6 @@ def register_order(request):
     serializer = OrderSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     loaded_order = serializer.data
-    print(request.data)
     obj = Order.objects.create(
         firstname=loaded_order['firstname'],
         lastname=loaded_order['lastname'],
