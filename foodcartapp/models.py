@@ -6,7 +6,8 @@ from phonenumber_field.modelfields import PhoneNumberField
 class Restaurant(models.Model):
     name = models.CharField(
         'название',
-        max_length=50
+        max_length=50,
+        db_index=True,
     )
     address = models.CharField(
         'адрес',
@@ -128,7 +129,7 @@ class ProductInOrder(models.Model):
     product = models.ForeignKey(
         'Product', verbose_name='Продукт', related_name='product', on_delete=models.CASCADE)
     order = models.ForeignKey(
-        'Order', verbose_name='Заказ', related_name='orders', on_delete=models.CASCADE)
+        'Order', verbose_name='Заказ', related_name='products_in_order', on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField('Количество')
 
     class Meta:
