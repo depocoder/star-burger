@@ -112,6 +112,14 @@ class ProductInOrderInline(admin.TabularInline):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
+    def save_formset(self, request, form, formset, change):
+        products_in_order = formset.save(commit=False)
+        for product_in_order in products_in_order:
+            if not product_in_order.price:
+                product_in_order.price = product_in_order.product.price
+                product_in_order.save()
+        formset.save_m2m()
+
     inlines = [
         ProductInOrderInline,
     ]
