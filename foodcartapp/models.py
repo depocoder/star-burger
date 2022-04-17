@@ -147,7 +147,7 @@ class Order(models.Model):
         def collecting_order_prices(self):
             return self.prefetch_related(
                 Prefetch('products_in_order', queryset=ProductInOrder.objects.prefetch_related('product'))).annotate(
-                order_price=F('products_in_order__product__price') * F('products_in_order__quantity'))
+                order_price=F('products_in_order__price') * F('products_in_order__quantity'))
 
     query_set_with_price = CustomQuerySet.as_manager()
 
