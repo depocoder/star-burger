@@ -33,8 +33,8 @@ class ProductQuerySet(models.QuerySet):
     def available(self):
         products = (
             RestaurantMenuItem.objects
-            .filter(availability=True)
-            .values_list('product')
+                .filter(availability=True)
+                .values_list('product')
         )
         return self.filter(pk__in=products)
 
@@ -132,6 +132,7 @@ class ProductInOrder(models.Model):
     order = models.ForeignKey(
         'Order', verbose_name='Заказ', related_name='products_in_order', on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField('Количество')
+    price = models.DecimalField('Цена продукта', max_digits=100, decimal_places=2, validators=[MinValueValidator(0), ])
 
     class Meta:
         verbose_name = 'продукт заказа'
@@ -142,7 +143,6 @@ class ProductInOrder(models.Model):
 
 
 class Order(models.Model):
-
     class CustomQuerySet(models.QuerySet):
         def collecting_order_prices(self):
             return self.prefetch_related(
