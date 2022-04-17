@@ -1,5 +1,4 @@
 from django import forms
-from django.db.models import Count, F, Prefetch
 from django.shortcuts import redirect, render
 from django.views import View
 from django.urls import reverse_lazy
@@ -98,5 +97,5 @@ def view_restaurants(request):
 def view_orders(request):
     orders = Order.query_set_with_price.collecting_order_prices()
     return render(request, template_name='order_items.html', context={
-        'order_items': orders
+        'order_items': orders,
     })
