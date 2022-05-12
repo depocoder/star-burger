@@ -1,8 +1,11 @@
-from django.contrib import admin
-from django.shortcuts import reverse
+from django.contrib import admin, messages
+from django.shortcuts import reverse, redirect
 from django.templatetags.static import static
 from django.utils.html import format_html
+from django.utils.http import url_has_allowed_host_and_scheme
 
+from star_burger import settings
+from .form import OrderForm
 from .models import Product, Order, ProductInOrder
 from .models import ProductCategory
 from .models import Restaurant
@@ -112,6 +115,32 @@ class ProductInOrderInline(admin.TabularInline):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
+    def response_change(self, request, obj):
+        default_response = super().response_change(request, obj)
+        if not 'next' in request.GET:
+            return default_response
+
+        # Clearing the messages
+        storage = messages.get_messages(request)
+        for message in storage:
+            _ = message
+
+        url = request.GET['next']
+        if url_has_allowed_host_and_scheme(url, settings.ALLOWED_HOSTS):
+            return redirect(url)
+        return default_response
+
+    # def response_change(self, request, obj):
+    #     res = super().response_change(request, obj)
+        # if "next" in request.GET:
+            # request_next = request.GET['next']
+            # if is_safe_url(request_next)
+        # return HttpResponseRedirect(reverse('restaurateur:view_orders'))
+        # else:
+        #     return res
+
+    form = OrderForm
+
     def save_formset(self, request, form, formset, change):
         products_in_order = formset.save(commit=False)
         for product_in_order in products_in_order:
