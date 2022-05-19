@@ -118,6 +118,9 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = [
         'pk', 'address', 'firstname', 'lastname',
     ]
+    list_filter = [
+        'state',
+    ]
     form = OrderForm
 
     def response_change(self, request, obj):

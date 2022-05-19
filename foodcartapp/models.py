@@ -144,10 +144,22 @@ class ProductInOrder(models.Model):
 
 
 class Order(models.Model):
+    class OrderState(models.TextChoices):
+        PROCESSED = 'PR', 'Обработанный'
+        NOT_PROCESSED = 'NP', 'Необработанный'
+
     firstname = models.CharField(max_length=32, verbose_name='имя')
     lastname = models.CharField(max_length=64, verbose_name='фамилия')
     phonenumber = PhoneNumberField(verbose_name='номер телефона')
     address = models.CharField(max_length=256, verbose_name='адрес доставки')
+
+    state = models.CharField(
+        max_length=2,
+        choices=OrderState.choices,
+        default=OrderState.NOT_PROCESSED,
+        db_index=True,
+        verbose_name='Статус заказа'
+    )
 
     class Meta:
         verbose_name = 'заказ клиента'
