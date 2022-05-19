@@ -144,14 +144,6 @@ class ProductInOrder(models.Model):
 
 
 class Order(models.Model):
-    class CustomQuerySet(models.QuerySet):
-        def collecting_order_prices(self):
-            return self.prefetch_related(
-                Prefetch('products_in_order', queryset=ProductInOrder.objects.select_related('product'))).annotate(
-                order_price=F('products_in_order__price') * F('products_in_order__quantity'))
-
-    query_set_with_price = CustomQuerySet.as_manager()
-
     firstname = models.CharField(max_length=32, verbose_name='имя')
     lastname = models.CharField(max_length=64, verbose_name='фамилия')
     phonenumber = PhoneNumberField(verbose_name='номер телефона')

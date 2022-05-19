@@ -115,9 +115,14 @@ class ProductInOrderInline(admin.TabularInline):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
+    list_display = [
+        'pk', 'address', 'firstname', 'lastname',
+    ]
+    form = OrderForm
+
     def response_change(self, request, obj):
         default_response = super().response_change(request, obj)
-        if not 'next' in request.GET:
+        if 'next' not in request.GET:
             return default_response
 
         # Clearing the messages
@@ -130,23 +135,12 @@ class OrderAdmin(admin.ModelAdmin):
             return redirect(url)
         return default_response
 
-    # def response_change(self, request, obj):
-    #     res = super().response_change(request, obj)
-        # if "next" in request.GET:
-            # request_next = request.GET['next']
-            # if is_safe_url(request_next)
-        # return HttpResponseRedirect(reverse('restaurateur:view_orders'))
-        # else:
-        #     return res
-
-    form = OrderForm
-
     def save_formset(self, request, form, formset, change):
         products_in_order = formset.save(commit=False)
         for product_in_order in products_in_order:
             if not product_in_order.price:
                 product_in_order.price = product_in_order.product.price
-                product_in_order.save()
+            product_in_order.save()
         formset.save_m2m()
 
     inlines = [

@@ -66,7 +66,7 @@ def register_order(request):
     serializer = OrderSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     loaded_order = serializer.data
-    order = Order.query_set_with_price.create(
+    order = Order.objects.create(
         firstname=loaded_order['firstname'],
         lastname=loaded_order['lastname'],
         phonenumber=loaded_order['phonenumber'],
