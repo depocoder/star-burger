@@ -121,6 +121,7 @@ class OrderAdmin(admin.ModelAdmin):
     list_filter = [
         'state',
     ]
+    readonly_fields = ["registered_at"]
     form = OrderForm
 
     def response_change(self, request, obj):
