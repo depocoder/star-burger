@@ -149,6 +149,11 @@ class Order(models.Model):
         PROCESSED = 'PR', 'Обработанный'
         NOT_PROCESSED = 'NP', 'Необработанный'
 
+    class PayMethodChoice(models.TextChoices):
+        CASH = 'CS', 'Наличные'
+        ELECTRONIC = 'EC', 'Электронный'
+        NOT_CHOSEN = 'NC', 'Не выбрано'
+
     firstname = models.CharField(max_length=32, verbose_name='имя')
     lastname = models.CharField(max_length=64, verbose_name='фамилия')
     phonenumber = PhoneNumberField(verbose_name='номер телефона')
@@ -166,6 +171,15 @@ class Order(models.Model):
         db_index=True,
         verbose_name='Статус заказа'
     )
+
+    pay_method = models.CharField(
+        max_length=2,
+        choices=PayMethodChoice.choices,
+        db_index=True,
+        default=PayMethodChoice.NOT_CHOSEN,
+        verbose_name='Способ оплаты',
+    )
+
 
     class Meta:
         verbose_name = 'заказ клиента'
