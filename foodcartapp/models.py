@@ -181,7 +181,7 @@ class Order(models.Model):
     delivered_at = models.DateTimeField(verbose_name='Дата доставки', db_index=True, blank=True, null=True)
 
     who_cook = models.ForeignKey(Restaurant, verbose_name='Кто готовит?', on_delete=models.SET_NULL,
-                                 blank=True, null=True,
+                                 blank=True, null=True, related_name='order_who_cook'
                                  )
 
     state = models.CharField(
