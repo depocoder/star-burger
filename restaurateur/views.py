@@ -1,5 +1,4 @@
 from django import forms
-from django.db.models import F, Sum
 from django.shortcuts import redirect, render
 from django.views import View
 from django.urls import reverse_lazy
@@ -8,7 +7,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import views as auth_views
 
-from foodcartapp.models import Product, Restaurant, Order, ProductInOrder
+from foodcartapp.models import Product, Restaurant, Order
 
 
 class Login(forms.Form):
@@ -66,14 +65,14 @@ def is_manager(user):
 @user_passes_test(is_manager, login_url='restaurateur:login')
 def view_products(request):
     restaurants = list(Restaurant.objects.order_by('name'))
-    products = list(Product.objects.prefetch_related('menu_items'))
+    products = list(Product.objects.prefetch_related('menu_products'))
 
     default_availability = {restaurant.id: False for restaurant in restaurants}
     products_with_restaurants = []
     for product in products:
         availability = {
             **default_availability,
-            **{item.restaurant_id: item.availability for item in product.menu_items.all()},
+            **{item.restaurant_id: item.availability for item in product.menu_products.all()},
         }
         orderer_availability = [availability[restaurant.id] for restaurant in restaurants]
 
@@ -96,8 +95,25 @@ def view_restaurants(request):
 
 @user_passes_test(is_manager, login_url='restaurateur:login')
 def view_orders(request):
-    orders = Order.objects.filter(state=Order.OrderState.NOT_PROCESSED).annotate(
-                order_price=(Sum(F('products_in_order__price') * F('products_in_order__quantity'))))
+    restaurants = Restaurant.objects.available_restaurants()
+
+    orders = Order.objects.not_processed().select_related('who_cook')
+
+    for order in orders:
+        if order.who_cook:
+            continue
+        products_in_order = order.products_in_order
+        product_pks = [product_in_order.product.pk for product_in_order in products_in_order.all()]
+        order.available_restaurants = list()
+        for restaurant in restaurants:
+            restaurant_menu = restaurant.menu_restaurants.all()
+            available_product_pks = [restaurant_menu.product.pk for restaurant_menu in restaurant_menu]
+            for product_pk in product_pks:
+                if product_pk not in available_product_pks:
+                    break
+            else:
+                order.available_restaurants.append(restaurant)
+
     return render(request, template_name='order_items.html', context={
         'order_items': orders,
     })

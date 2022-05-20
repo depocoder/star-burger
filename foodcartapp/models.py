@@ -1,11 +1,17 @@
 from django.db import models
 from django.core.validators import MinValueValidator
-from django.db.models import Prefetch, F
-from django.utils import timezone
+from django.db.models import Prefetch, F, Sum
 from phonenumber_field.modelfields import PhoneNumberField
 
 
 class Restaurant(models.Model):
+    class RestaurantsQuerySet(models.QuerySet):
+        def available_restaurants(self):
+            prefetched_restaurants = self.prefetch_related(Prefetch(
+                'menu_restaurants', queryset=RestaurantMenuItem.objects.select_related('product'))
+            )
+            return prefetched_restaurants.filter(menu_restaurants__availability=True).distinct()
+
     name = models.CharField(
         'название',
         max_length=50,
@@ -22,22 +28,14 @@ class Restaurant(models.Model):
         blank=True,
     )
 
+    objects = RestaurantsQuerySet.as_manager()
+
     class Meta:
         verbose_name = 'ресторан'
         verbose_name_plural = 'рестораны'
 
     def __str__(self):
         return self.name
-
-
-class ProductQuerySet(models.QuerySet):
-    def available(self):
-        products = (
-            RestaurantMenuItem.objects
-                .filter(availability=True)
-                .values_list('product')
-        )
-        return self.filter(pk__in=products)
 
 
 class ProductCategory(models.Model):
@@ -55,6 +53,16 @@ class ProductCategory(models.Model):
 
 
 class Product(models.Model):
+    class ProductQuerySet(models.QuerySet):
+        def available(self):
+            products = (
+                RestaurantMenuItem.objects
+                    .filter(availability=True)
+                    .values_list('product')
+            )
+            return self.filter(pk__in=products)
+
+
     name = models.CharField(
         'название',
         max_length=50
@@ -100,14 +108,14 @@ class Product(models.Model):
 class RestaurantMenuItem(models.Model):
     restaurant = models.ForeignKey(
         Restaurant,
-        related_name='menu_items',
+        related_name='menu_restaurants',
         verbose_name="ресторан",
         on_delete=models.CASCADE,
     )
     product = models.ForeignKey(
         Product,
         on_delete=models.CASCADE,
-        related_name='menu_items',
+        related_name='menu_products',
         verbose_name='продукт',
     )
     availability = models.BooleanField(
@@ -145,6 +153,14 @@ class ProductInOrder(models.Model):
 
 
 class Order(models.Model):
+    class ProductQuerySet(models.QuerySet):
+        def not_processed(self):
+            return self.prefetch_related(
+                Prefetch('products_in_order', queryset=ProductInOrder.objects.select_related('product'))).filter(
+                state=Order.OrderState.NOT_PROCESSED).annotate(
+                order_price=(Sum(F('products_in_order__price') * F('products_in_order__quantity')))
+            )
+
     class OrderState(models.TextChoices):
         PROCESSED = 'PR', 'Обработанный'
         NOT_PROCESSED = 'NP', 'Необработанный'
@@ -164,6 +180,10 @@ class Order(models.Model):
     called_at = models.DateTimeField(verbose_name='Дата звонка', db_index=True, blank=True, null=True)
     delivered_at = models.DateTimeField(verbose_name='Дата доставки', db_index=True, blank=True, null=True)
 
+    who_cook = models.ForeignKey(Restaurant, verbose_name='Кто готовит?', on_delete=models.SET_NULL,
+                                 blank=True, null=True,
+                                 )
+
     state = models.CharField(
         max_length=2,
         choices=OrderState.choices,
@@ -180,6 +200,7 @@ class Order(models.Model):
         verbose_name='Способ оплаты',
     )
 
+    objects = ProductQuerySet.as_manager()
 
     class Meta:
         verbose_name = 'заказ клиента'
