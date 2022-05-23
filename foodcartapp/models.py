@@ -1,5 +1,3 @@
-import operator
-
 from django.conf import settings
 from django.db import models
 from django.core.validators import MinValueValidator
@@ -9,7 +7,7 @@ from geopy.distance import distance
 from phonenumber_field.modelfields import PhoneNumberField
 
 from distances.models import Place
-from foodcartapp.yandex_api import fetch_coordinates
+from distances.yandex_api import fetch_coordinates
 
 
 class Restaurant(models.Model):
