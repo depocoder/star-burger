@@ -1,7 +1,14 @@
+import operator
+
+from django.conf import settings
 from django.db import models
 from django.core.validators import MinValueValidator
 from django.db.models import Prefetch, F, Sum
+from geopy.distance import distance
+
 from phonenumber_field.modelfields import PhoneNumberField
+
+from foodcartapp.yandex_api import fetch_coordinates
 
 
 class Restaurant(models.Model):
@@ -61,7 +68,6 @@ class Product(models.Model):
                     .values_list('product')
             )
             return self.filter(pk__in=products)
-
 
     name = models.CharField(
         'название',
@@ -164,13 +170,21 @@ class Order(models.Model):
         def prefetch_available_restaurants(self):
             restaurants = Restaurant.objects.available_product_restaurants()
             orders = self.not_processed().select_related('who_cook')
+            coordinates_cache = {}
 
             for order in orders:
                 if order.who_cook:
                     continue
+
+                order_address = order.address
+                order_coordinates = coordinates_cache.get(order_address)
+                if not order_coordinates:
+                    order_coordinates = fetch_coordinates(settings.YANDEX_API_KEY, order_address)
+                    coordinates_cache[order_address] = order_coordinates
+
                 products_in_order = order.products_in_order
                 product_pks = [product_in_order.product.pk for product_in_order in products_in_order.all()]
-                order.available_product_restaurants = list()
+                order.available_restaurants = list()
                 for restaurant in restaurants:
                     restaurant_menu = restaurant.menu_restaurants.all()
                     available_product_pks = [restaurant_menu.product.pk for restaurant_menu in restaurant_menu]
@@ -178,7 +192,25 @@ class Order(models.Model):
                         if product_pk not in available_product_pks:
                             break
                     else:
-                        order.available_product_restaurants.append(restaurant)
+                        restaurant_address = restaurant.address
+                        restaurant_coordinates = coordinates_cache.get(restaurant_address)
+                        if not restaurant_coordinates:
+                            restaurant_coordinates = fetch_coordinates(settings.YANDEX_API_KEY, restaurant_address)
+                            coordinates_cache[restaurant_address] = restaurant_coordinates
+                        if order_coordinates and restaurant_coordinates:
+                            distance_km = distance(order_coordinates, restaurant_coordinates).km
+                            repr_distance = f"{distance_km} км"
+                        else:
+                            distance_km = 0
+                            repr_distance = 'ошибка определения координат'
+                        serialized_restaurant = {
+                            'distance_km': distance_km,
+                            'repr_distance': repr_distance,
+                            'address': restaurant_address,
+                            'name': restaurant.name,
+                        }
+                        order.available_restaurants.append(serialized_restaurant)
+                order.available_restaurants.sort(key=lambda restaurant: int(restaurant['distance_km']))
             return orders
 
     class OrderState(models.TextChoices):

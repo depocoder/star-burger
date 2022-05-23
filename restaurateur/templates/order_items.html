@@ -41,7 +41,7 @@
         {% else %}
             {% for available_restaurant in order.available_restaurants %}
               <details>
-                <summary>{{ available_restaurant.name}}</summary>
+                <summary>{{ available_restaurant.name}} - {{available_restaurant.repr_distance}}</summary>
                 {{ available_restaurant.address }}
               </details>
 
