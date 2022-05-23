@@ -6,7 +6,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 class Restaurant(models.Model):
     class RestaurantsQuerySet(models.QuerySet):
-        def available_restaurants(self):
+        def available_product_restaurants(self):
             prefetched_restaurants = self.prefetch_related(Prefetch(
                 'menu_restaurants', queryset=RestaurantMenuItem.objects.select_related('product'))
             )
@@ -160,6 +160,26 @@ class Order(models.Model):
                 state=Order.OrderState.NOT_PROCESSED).annotate(
                 order_price=(Sum(F('products_in_order__price') * F('products_in_order__quantity')))
             )
+
+        def prefetch_available_restaurants(self):
+            restaurants = Restaurant.objects.available_product_restaurants()
+            orders = self.not_processed().select_related('who_cook')
+
+            for order in orders:
+                if order.who_cook:
+                    continue
+                products_in_order = order.products_in_order
+                product_pks = [product_in_order.product.pk for product_in_order in products_in_order.all()]
+                order.available_product_restaurants = list()
+                for restaurant in restaurants:
+                    restaurant_menu = restaurant.menu_restaurants.all()
+                    available_product_pks = [restaurant_menu.product.pk for restaurant_menu in restaurant_menu]
+                    for product_pk in product_pks:
+                        if product_pk not in available_product_pks:
+                            break
+                    else:
+                        order.available_product_restaurants.append(restaurant)
+            return orders
 
     class OrderState(models.TextChoices):
         PROCESSED = 'PR', 'Обработанный'

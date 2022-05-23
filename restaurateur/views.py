@@ -95,24 +95,7 @@ def view_restaurants(request):
 
 @user_passes_test(is_manager, login_url='restaurateur:login')
 def view_orders(request):
-    restaurants = Restaurant.objects.available_restaurants()
-
-    orders = Order.objects.not_processed().select_related('who_cook')
-
-    for order in orders:
-        if order.who_cook:
-            continue
-        products_in_order = order.products_in_order
-        product_pks = [product_in_order.product.pk for product_in_order in products_in_order.all()]
-        order.available_restaurants = list()
-        for restaurant in restaurants:
-            restaurant_menu = restaurant.menu_restaurants.all()
-            available_product_pks = [restaurant_menu.product.pk for restaurant_menu in restaurant_menu]
-            for product_pk in product_pks:
-                if product_pk not in available_product_pks:
-                    break
-            else:
-                order.available_restaurants.append(restaurant)
+    orders = Order.objects.prefetch_available_restaurants()
 
     return render(request, template_name='order_items.html', context={
         'order_items': orders,
