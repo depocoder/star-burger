@@ -8,6 +8,7 @@ from geopy.distance import distance
 
 from phonenumber_field.modelfields import PhoneNumberField
 
+from distances.models import Place
 from foodcartapp.yandex_api import fetch_coordinates
 
 
@@ -169,19 +170,25 @@ class Order(models.Model):
 
         def prefetch_available_restaurants(self):
             restaurants = Restaurant.objects.available_product_restaurants()
+            places = {
+                place.address: (place.lat, place.lon) if place.lat and place.lon else None
+                for place in Place.objects.all()
+            }
             orders = self.not_processed().select_related('who_cook')
-            coordinates_cache = {}
 
             for order in orders:
                 if order.who_cook:
                     continue
 
                 order_address = order.address
-                order_coordinates = coordinates_cache.get(order_address)
-                if not order_coordinates:
+                if order_address in places:
+                    order_coordinates = places[order_address]
+                else:
                     order_coordinates = fetch_coordinates(settings.YANDEX_API_KEY, order_address)
-                    coordinates_cache[order_address] = order_coordinates
-
+                    lat, lon = order_coordinates if order_coordinates else (None, None)
+                    Place.objects.get_or_create(
+                        address=order_address, defaults={'lat': lat, 'lon': lon}
+                    )
                 products_in_order = order.products_in_order
                 product_pks = [product_in_order.product.pk for product_in_order in products_in_order.all()]
                 order.available_restaurants = list()
@@ -193,10 +200,14 @@ class Order(models.Model):
                             break
                     else:
                         restaurant_address = restaurant.address
-                        restaurant_coordinates = coordinates_cache.get(restaurant_address)
-                        if not restaurant_coordinates:
+                        if restaurant_address in places:
+                            restaurant_coordinates = places[restaurant_address]
+                        else:
                             restaurant_coordinates = fetch_coordinates(settings.YANDEX_API_KEY, restaurant_address)
-                            coordinates_cache[restaurant_address] = restaurant_coordinates
+                            lat, lon = restaurant_coordinates if restaurant_coordinates else (None, None)
+                            Place.objects.get_or_create(
+                                address=restaurant_address, defaults={'lat': lat, 'lon': lon}
+                            )
                         if order_coordinates and restaurant_coordinates:
                             distance_km = distance(order_coordinates, restaurant_coordinates).km
                             repr_distance = f"{distance_km} км"
@@ -210,7 +221,8 @@ class Order(models.Model):
                             'name': restaurant.name,
                         }
                         order.available_restaurants.append(serialized_restaurant)
-                order.available_restaurants.sort(key=lambda restaurant: int(restaurant['distance_km']))
+                order.available_restaurants.sort(
+                    key=lambda serialized_restaurant: int(serialized_restaurant['distance_km']))
             return orders
 
     class OrderState(models.TextChoices):
