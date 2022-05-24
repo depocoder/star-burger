@@ -80,7 +80,7 @@ class TestRegisterOrder(APITransactionTestCase):
         assert results['address'] == order['address']
 
     def test_error_products_is_str(self):
-        """// Продукты — это не список, а строка."""
+        """Продукты — это не список, а строка."""
         error = 'Ожидался list со значениями, но был получен "str".'
         order = {"products": "HelloWorld", "firstname": "Иван", "lastname": "Петров", "phonenumber": "+79291000000",
                  "address": "Москва"}
@@ -95,7 +95,7 @@ class TestRegisterOrder(APITransactionTestCase):
         assert error in results['products']
 
     def test_error_products_is_null(self):
-        """// Продукты — это null."""
+        """Продукты — это null."""
         error = 'Это поле не может быть пустым.'
         order = {"products": None, "firstname": "Иван", "lastname": "Петров", "phonenumber": "+79291000000",
                  "address": "Москва"}
@@ -110,7 +110,7 @@ class TestRegisterOrder(APITransactionTestCase):
         assert error in results['products']
 
     def test_error_products_is_empty(self):
-        """// Продукты — пустой список."""
+        """Продукты — пустой список."""
         error = 'Этот список не может быть пустым.'
         order = {"products": [], "firstname": "Иван", "lastname": "Петров", "phonenumber": "+79291000000",
                  "address": "Москва"}
@@ -125,7 +125,7 @@ class TestRegisterOrder(APITransactionTestCase):
         assert error in results['products']
 
     def test_error_do_not_have_products(self):
-        """// Продуктов нет."""
+        """Продуктов нет."""
         error = 'Обязательное поле.'
         order = {"firstname": "Иван", "lastname": "Петров", "phonenumber": "+79291000000", "address": "Москва"}
         response = self.client.post(
@@ -139,7 +139,7 @@ class TestRegisterOrder(APITransactionTestCase):
         assert error in results['products']
 
     def test_error_firstname_is_empty(self):
-        """// firstname: Это поле не может быть пустым."""
+        """firstname: Это поле не может быть пустым."""
         error = 'Это поле не может быть пустым.'
         order = {"products": [{"product": 1, "quantity": 1}], "firstname": None, "lastname": "Петров",
                  "phonenumber": "+79291000000", "address": "Москва"}
@@ -155,8 +155,8 @@ class TestRegisterOrder(APITransactionTestCase):
 
     def test_error_do_not_have_order_keys(self):
         """
-        // Ключей заказа вообще нет.
-        // firstname, lastname, phonenumber, address: Обязательное поле.
+        Ключей заказа вообще нет.
+        firstname, lastname, phonenumber, address: Обязательное поле.
         """
         product = Product.objects.first()
         error = 'Обязательное поле.'
@@ -175,7 +175,7 @@ class TestRegisterOrder(APITransactionTestCase):
         assert error in results['address']
 
     def test_error_missing_phone_number(self):
-        """// Номер телефона пустая строка"""
+        """Номер телефона пустая строка"""
         error = 'Это поле не может быть пустым.'
         product = Product.objects.first()
         order = {"products": [{"product": product.pk, "quantity": 1}], "firstname": "Тимур", "lastname": "Иванов",
@@ -191,7 +191,7 @@ class TestRegisterOrder(APITransactionTestCase):
         assert error in results['phonenumber']
 
     def test_error_not_valid_phone_numer(self):
-        """// Несуществующий номер телефона."""
+        """Несуществующий номер телефона."""
         error = 'Введен некорректный номер телефона.'
         product = Product.objects.first()
         order = {"products": [{"product": product.pk, "quantity": 1}], "firstname": "Тимур", "lastname": "Иванов",
@@ -207,7 +207,7 @@ class TestRegisterOrder(APITransactionTestCase):
         assert error in results['phonenumber']
 
     def test_error_not_existing_product(self):
-        """// Заказ с неуществующим id продукта."""
+        """Заказ с неуществующим id продукта."""
         product_id = 1_000_000
         error = f'Не найден продукт с таким индикатором - {product_id}'
         order = {"products": [{"product": product_id, "quantity": 1}], "firstname": "Иван", "lastname": "Петров",
@@ -223,7 +223,7 @@ class TestRegisterOrder(APITransactionTestCase):
         assert error in results['products']['0']['product']
 
     def test_error_firstname_is_str(self):
-        """// В поле firstname положили список."""
+        """В поле firstname положили список."""
         product = Product.objects.first()
         error = {'firstname': ['Not a valid string.']}
 
