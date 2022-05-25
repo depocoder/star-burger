@@ -1,5 +1,4 @@
 from django import forms
-from django.contrib.auth.views import LoginView
 
 from foodcartapp.models import Restaurant
 
