@@ -178,6 +178,7 @@ class OrderQuerySet(models.QuerySet):
             place.address: (place.lat, place.lon) if place.lat and place.lon else None
             for place in Place.objects.filter(address__in=addresses)
         }
+        places_to_create = []
 
         for order in orders:
             if order.who_cook:
@@ -188,9 +189,7 @@ class OrderQuerySet(models.QuerySet):
             else:
                 order_coordinates = fetch_coordinates(settings.YANDEX_API_KEY, order.address)
                 lat, lon = order_coordinates if order_coordinates else (None, None)
-                Place.objects.get_or_create(
-                    address=order_address, defaults={'lat': lat, 'lon': lon}
-                )
+                places_to_create.append(Place(address=order.address, lat=lat, lon=lon))
             products_in_order = order.products_in_order.all()
             product_pks = [product_in_order.product.pk for product_in_order in products_in_order]
             order.available_restaurants = list()
@@ -207,9 +206,7 @@ class OrderQuerySet(models.QuerySet):
                     else:
                         restaurant_coordinates = fetch_coordinates(settings.YANDEX_API_KEY, restaurant_address)
                         lat, lon = restaurant_coordinates if restaurant_coordinates else (None, None)
-                        Place.objects.get_or_create(
-                            address=restaurant_address, defaults={'lat': lat, 'lon': lon}
-                        )
+                        places_to_create.append(Place(address=restaurant_address, lat=lat, lon=lon))
                     if order_coordinates and restaurant_coordinates:
                         distance_km = distance(order_coordinates, restaurant_coordinates).km
                         repr_distance = f"{distance_km} км"
@@ -225,6 +222,7 @@ class OrderQuerySet(models.QuerySet):
                     order.available_restaurants.append(serialized_restaurant)
             order.available_restaurants.sort(
                 key=lambda serialized_restaurant: int(serialized_restaurant['distance_km']))
+        Place.objects.bulk_create(places)
         return orders
 
 
