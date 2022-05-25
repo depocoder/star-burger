@@ -10,14 +10,15 @@ from distances.models import Place
 from distances.yandex_api import fetch_coordinates
 
 
-class Restaurant(models.Model):
-    class RestaurantsQuerySet(models.QuerySet):
-        def available_product_restaurants(self):
-            prefetched_restaurants = self.prefetch_related(Prefetch(
-                'menu_restaurants', queryset=RestaurantMenuItem.objects.select_related('product'))
-            )
-            return prefetched_restaurants.filter(menu_restaurants__availability=True).distinct()
+class RestaurantsQuerySet(models.QuerySet):
+    def available_product_restaurants(self):
+        prefetched_restaurants = self.prefetch_related(Prefetch(
+            'menu_restaurants', queryset=RestaurantMenuItem.objects.select_related('product'))
+        )
+        return prefetched_restaurants.filter(menu_restaurants__availability=True).distinct()
 
+
+class Restaurant(models.Model):
     name = models.CharField(
         'название',
         max_length=50,
@@ -69,7 +70,6 @@ class ProductQuerySet(models.QuerySet):
 
 
 class Product(models.Model):
-
     name = models.CharField(
         'название',
         max_length=50
@@ -144,12 +144,12 @@ class RestaurantMenuItem(models.Model):
 
 class ProductInOrder(models.Model):
     product = models.ForeignKey(
-        'Product', verbose_name='Продукт', related_name='product', on_delete=models.CASCADE)
+        'Product', verbose_name='Продукт', related_name='products', on_delete=models.CASCADE)
     order = models.ForeignKey(
         'Order', verbose_name='Заказ', related_name='products_in_order', on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField('Количество')
+    quantity = models.PositiveIntegerField('Количество', validators=[MinValueValidator(1), ])
     price = models.DecimalField('Цена продукта', max_digits=100, decimal_places=2, validators=[MinValueValidator(0), ],
-                                blank=True, null=True, help_text='Цена заполняется автоматически')
+                                help_text='Цена заполняется автоматически')
 
     class Meta:
         verbose_name = 'продукт заказа'
@@ -159,72 +159,73 @@ class ProductInOrder(models.Model):
         return f'{self.product.name} {self.quantity} {self.order}'
 
 
-class Order(models.Model):
-    class ProductQuerySet(models.QuerySet):
-        def not_processed(self):
-            return self.prefetch_related(
-                Prefetch('products_in_order', queryset=ProductInOrder.objects.select_related('product'))).filter(
-                state=Order.OrderState.NOT_PROCESSED).annotate(
-                order_price=(Sum(F('products_in_order__price') * F('products_in_order__quantity')))
-            )
+class OrderQuerySet(models.QuerySet):
+    def not_processed(self):
+        return self.filter(
+            state=Order.OrderState.NOT_PROCESSED)
 
-        def prefetch_available_restaurants(self):
-            restaurants = Restaurant.objects.available_product_restaurants()
-            places = {
-                place.address: (place.lat, place.lon) if place.lat and place.lon else None
-                for place in Place.objects.all()
-            }
-            orders = self.not_processed().select_related('who_cook')
+    def prefetch_available_restaurants(self):
+        restaurants = Restaurant.objects.available_product_restaurants()
+        places = {
+            place.address: (place.lat, place.lon) if place.lat and place.lon else None
+            for place in Place.objects.all()
+        }
+        orders = self.not_processed().prefetch_related(
+            Prefetch('products_in_order', queryset=ProductInOrder.objects.select_related('product'))).annotate(
+            order_price=(Sum(F('products_in_order__price') * F('products_in_order__quantity')))
+        ).select_related('who_cook')
 
-            for order in orders:
-                if order.who_cook:
-                    continue
+        for order in orders:
+            if order.who_cook:
+                continue
 
-                order_address = order.address
-                if order_address in places:
-                    order_coordinates = places[order_address]
+            order_address = order.address
+            if order_address in places:
+                order_coordinates = places[order_address]
+            else:
+                order_coordinates = fetch_coordinates(settings.YANDEX_API_KEY, order_address)
+                lat, lon = order_coordinates if order_coordinates else (None, None)
+                Place.objects.get_or_create(
+                    address=order_address, defaults={'lat': lat, 'lon': lon}
+                )
+            products_in_order = order.products_in_order
+            product_pks = [product_in_order.product.pk for product_in_order in products_in_order.all()]
+            order.available_restaurants = list()
+            for restaurant in restaurants:
+                restaurant_menu = restaurant.menu_restaurants.all()
+                available_product_pks = [restaurant_menu.product.pk for restaurant_menu in restaurant_menu]
+                for product_pk in product_pks:
+                    if product_pk not in available_product_pks:
+                        break
                 else:
-                    order_coordinates = fetch_coordinates(settings.YANDEX_API_KEY, order_address)
-                    lat, lon = order_coordinates if order_coordinates else (None, None)
-                    Place.objects.get_or_create(
-                        address=order_address, defaults={'lat': lat, 'lon': lon}
-                    )
-                products_in_order = order.products_in_order
-                product_pks = [product_in_order.product.pk for product_in_order in products_in_order.all()]
-                order.available_restaurants = list()
-                for restaurant in restaurants:
-                    restaurant_menu = restaurant.menu_restaurants.all()
-                    available_product_pks = [restaurant_menu.product.pk for restaurant_menu in restaurant_menu]
-                    for product_pk in product_pks:
-                        if product_pk not in available_product_pks:
-                            break
+                    restaurant_address = restaurant.address
+                    if restaurant_address in places:
+                        restaurant_coordinates = places[restaurant_address]
                     else:
-                        restaurant_address = restaurant.address
-                        if restaurant_address in places:
-                            restaurant_coordinates = places[restaurant_address]
-                        else:
-                            restaurant_coordinates = fetch_coordinates(settings.YANDEX_API_KEY, restaurant_address)
-                            lat, lon = restaurant_coordinates if restaurant_coordinates else (None, None)
-                            Place.objects.get_or_create(
-                                address=restaurant_address, defaults={'lat': lat, 'lon': lon}
-                            )
-                        if order_coordinates and restaurant_coordinates:
-                            distance_km = distance(order_coordinates, restaurant_coordinates).km
-                            repr_distance = f"{distance_km} км"
-                        else:
-                            distance_km = 0
-                            repr_distance = 'ошибка определения координат'
-                        serialized_restaurant = {
-                            'distance_km': distance_km,
-                            'repr_distance': repr_distance,
-                            'address': restaurant_address,
-                            'name': restaurant.name,
-                        }
-                        order.available_restaurants.append(serialized_restaurant)
-                order.available_restaurants.sort(
-                    key=lambda serialized_restaurant: int(serialized_restaurant['distance_km']))
-            return orders
+                        restaurant_coordinates = fetch_coordinates(settings.YANDEX_API_KEY, restaurant_address)
+                        lat, lon = restaurant_coordinates if restaurant_coordinates else (None, None)
+                        Place.objects.get_or_create(
+                            address=restaurant_address, defaults={'lat': lat, 'lon': lon}
+                        )
+                    if order_coordinates and restaurant_coordinates:
+                        distance_km = distance(order_coordinates, restaurant_coordinates).km
+                        repr_distance = f"{distance_km} км"
+                    else:
+                        distance_km = 0
+                        repr_distance = 'ошибка определения координат'
+                    serialized_restaurant = {
+                        'distance_km': distance_km,
+                        'repr_distance': repr_distance,
+                        'address': restaurant_address,
+                        'name': restaurant.name,
+                    }
+                    order.available_restaurants.append(serialized_restaurant)
+            order.available_restaurants.sort(
+                key=lambda serialized_restaurant: int(serialized_restaurant['distance_km']))
+        return orders
 
+
+class Order(models.Model):
     class OrderState(models.TextChoices):
         PROCESSED = 'PR', 'Обработанный'
         NOT_PROCESSED = 'NP', 'Необработанный'
@@ -236,7 +237,7 @@ class Order(models.Model):
 
     firstname = models.CharField(max_length=32, verbose_name='имя')
     lastname = models.CharField(max_length=64, verbose_name='фамилия')
-    phonenumber = PhoneNumberField(verbose_name='номер телефона')
+    phonenumber = PhoneNumberField(verbose_name='номер телефона', db_index=True)
     address = models.CharField(max_length=256, verbose_name='адрес доставки')
     comment = models.TextField(verbose_name='Комментарий', blank=True)
 
@@ -264,7 +265,7 @@ class Order(models.Model):
         verbose_name='Способ оплаты',
     )
 
-    objects = ProductQuerySet.as_manager()
+    objects = OrderQuerySet.as_manager()
 
     class Meta:
         verbose_name = 'заказ клиента'
