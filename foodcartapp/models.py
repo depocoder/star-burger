@@ -58,15 +58,17 @@ class ProductCategory(models.Model):
         return self.name
 
 
+class ProductQuerySet(models.QuerySet):
+    def available(self):
+        products = (
+            RestaurantMenuItem.objects
+                .filter(availability=True)
+                .values_list('product')
+        )
+        return self.filter(pk__in=products)
+
+
 class Product(models.Model):
-    class ProductQuerySet(models.QuerySet):
-        def available(self):
-            products = (
-                RestaurantMenuItem.objects
-                    .filter(availability=True)
-                    .values_list('product')
-            )
-            return self.filter(pk__in=products)
 
     name = models.CharField(
         'название',
