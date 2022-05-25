@@ -144,7 +144,7 @@ class RestaurantMenuItem(models.Model):
 
 class ProductInOrder(models.Model):
     product = models.ForeignKey(
-        'Product', verbose_name='Продукт', related_name='products', on_delete=models.CASCADE)
+        'Product', verbose_name='Продукт', related_name='product_carts', on_delete=models.CASCADE)
     order = models.ForeignKey(
         'Order', verbose_name='Заказ', related_name='products_in_order', on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField('Количество', validators=[MinValueValidator(1), ])
@@ -247,7 +247,7 @@ class Order(models.Model):
     delivered_at = models.DateTimeField(verbose_name='Дата доставки', db_index=True, blank=True, null=True)
 
     who_cook = models.ForeignKey(Restaurant, verbose_name='Кто готовит?', on_delete=models.SET_NULL,
-                                 blank=True, null=True, related_name='order_who_cook'
+                                 blank=True, null=True, related_name='orders_which_cook'
                                  )
 
     state = models.CharField(
