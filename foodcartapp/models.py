@@ -222,7 +222,7 @@ class OrderQuerySet(models.QuerySet):
                     order.available_restaurants.append(serialized_restaurant)
             order.available_restaurants.sort(
                 key=lambda serialized_restaurant: int(serialized_restaurant['distance_km']))
-        Place.objects.bulk_create(places)
+        Place.objects.bulk_create(places_to_create)
         return orders
 
 
