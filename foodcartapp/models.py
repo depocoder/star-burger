@@ -183,17 +183,16 @@ class OrderQuerySet(models.QuerySet):
             if order.who_cook:
                 continue
 
-            order_address = order.address
-            if order_address in places:
-                order_coordinates = places[order_address]
+            if order.address in places:
+                order_coordinates = places[order.address]
             else:
-                order_coordinates = fetch_coordinates(settings.YANDEX_API_KEY, order_address)
+                order_coordinates = fetch_coordinates(settings.YANDEX_API_KEY, order.address)
                 lat, lon = order_coordinates if order_coordinates else (None, None)
                 Place.objects.get_or_create(
                     address=order_address, defaults={'lat': lat, 'lon': lon}
                 )
-            products_in_order = order.products_in_order
-            product_pks = [product_in_order.product.pk for product_in_order in products_in_order.all()]
+            products_in_order = order.products_in_order.all()
+            product_pks = [product_in_order.product.pk for product_in_order in products_in_order]
             order.available_restaurants = list()
             for restaurant in restaurants:
                 restaurant_menu = restaurant.menu_restaurants.all()
