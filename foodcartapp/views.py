@@ -72,13 +72,14 @@ def register_order(request):
         phonenumber=loaded_order['phonenumber'],
         address=loaded_order['address']
     )
-
-    for loaded_product in loaded_order['products']:
-        product = Product.objects.get(pk=loaded_product['product'])
-        ProductInOrder.objects.create(
+    products_in_order_to_create = []
+    products = {product['product']: product['quantity'] for product in loaded_order['products']}
+    for product in Product.objects.filter(pk__in=products.keys()):
+        products_in_order_to_create.append(ProductInOrder(
             order=order,
             product=product,
-            quantity=loaded_product['quantity'],
+            quantity=products[product.pk],
             price=product.price,
-        )
+        ))
+    ProductInOrder.objects.bulk_create(products_in_order_to_create)
     return Response(loaded_order)
