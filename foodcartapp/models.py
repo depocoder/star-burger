@@ -1,13 +1,8 @@
-from django.conf import settings
 from django.db import models
 from django.core.validators import MinValueValidator
-from django.db.models import Prefetch, F, Sum
-from geopy.distance import distance
+from django.db.models import Prefetch
 
 from phonenumber_field.modelfields import PhoneNumberField
-
-from distances.models import Place
-from distances.yandex_api import fetch_coordinates
 
 
 class RestaurantsQuerySet(models.QuerySet):
@@ -163,69 +158,6 @@ class OrderQuerySet(models.QuerySet):
     def not_processed(self):
         return self.filter(
             state=Order.OrderState.NOT_PROCESSED)
-
-    def prefetch_available_restaurants(self):
-        restaurants = Restaurant.objects.available_product_restaurants()
-
-        orders = self.not_processed().prefetch_related(
-            Prefetch('products_in_order', queryset=ProductInOrder.objects.select_related('product'))).annotate(
-            order_price=(Sum(F('products_in_order__price') * F('products_in_order__quantity')))
-        ).select_related('who_cook')
-        addresses = list(restaurants.values_list('address', flat=True))
-        addresses.extend(list(orders.values_list('address', flat=True)))
-
-        places = {
-            place.address: (place.lat, place.lon) if place.lat and place.lon else (None, None)
-            for place in Place.objects.filter(address__in=addresses)
-        }
-        places_to_create = []
-
-        for order in orders:
-            if order.who_cook:
-                continue
-
-            if order.address in places:
-                order_coordinates = places[order.address]
-            else:
-                order_coordinates = fetch_coordinates(settings.YANDEX_API_KEY, order.address)
-                lat, lon = order_coordinates
-                places_to_create.append(Place(address=order.address, lat=lat, lon=lon))
-                places[order.address] = order_coordinates
-            products_in_order = order.products_in_order.all()
-            product_pks = [product_in_order.product.pk for product_in_order in products_in_order]
-            order.available_restaurants = list()
-            for restaurant in restaurants:
-                restaurant_menu = restaurant.menu_restaurants.all()
-                available_product_pks = [restaurant_menu.product.pk for restaurant_menu in restaurant_menu]
-                for product_pk in product_pks:
-                    if product_pk not in available_product_pks:
-                        break
-                else:
-                    restaurant_address = restaurant.address
-                    if restaurant_address in places:
-                        restaurant_coordinates = places[restaurant_address]
-                    else:
-                        restaurant_coordinates = fetch_coordinates(settings.YANDEX_API_KEY, restaurant_address)
-                        lat, lon = restaurant_coordinates
-                        places[restaurant.address] = restaurant_coordinates
-                        places_to_create.append(Place(address=restaurant_address, lat=lat, lon=lon))
-                    if all(order_coordinates) and all(restaurant_coordinates):
-                        distance_km = distance(order_coordinates, restaurant_coordinates).km
-                        repr_distance = f"{distance_km} км"
-                    else:
-                        distance_km = 0
-                        repr_distance = 'ошибка определения координат'
-                    serialized_restaurant = {
-                        'distance_km': distance_km,
-                        'repr_distance': repr_distance,
-                        'address': restaurant_address,
-                        'name': restaurant.name,
-                    }
-                    order.available_restaurants.append(serialized_restaurant)
-            order.available_restaurants.sort(
-                key=lambda serialized_restaurant: int(serialized_restaurant['distance_km']))
-        Place.objects.bulk_create(places_to_create)
-        return orders
 
 
 class Order(models.Model):
