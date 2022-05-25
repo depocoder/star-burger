@@ -6,11 +6,31 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 
 class RestaurantsQuerySet(models.QuerySet):
-    def available_product_restaurants(self):
-        prefetched_restaurants = self.prefetch_related(Prefetch(
+    def prefetch_products(self):
+        return self.prefetch_related(Prefetch(
             'menu_restaurants', queryset=RestaurantMenuItem.objects.select_related('product'))
         )
-        return prefetched_restaurants.filter(menu_restaurants__availability=True).distinct()
+
+    def get_restaurants_with_order_products(self, order_id: int) -> models.QuerySet:
+        restaurants = self.prefetch_products().order_by('name')
+        products = Product.objects.filter(
+            product_carts__order=order_id,
+        )
+
+        restaurants_with_complete_set = []
+        for restaurant in restaurants:
+            restaurant_menu_products_pks = [
+                restaurant_menu.product.pk for restaurant_menu in restaurant.menu_restaurants.all()]
+            for product in products:
+                if product.pk not in restaurant_menu_products_pks:
+                    break
+            else:
+                restaurants_with_complete_set.append(restaurant.pk)
+
+        return restaurants.filter(id__in=restaurants_with_complete_set)
+
+    def available_product_restaurants(self):
+        return self.prefetch_products().filter(menu_restaurants__availability=True).distinct()
 
 
 class Restaurant(models.Model):
