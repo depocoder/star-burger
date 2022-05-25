@@ -166,14 +166,18 @@ class OrderQuerySet(models.QuerySet):
 
     def prefetch_available_restaurants(self):
         restaurants = Restaurant.objects.available_product_restaurants()
-        places = {
-            place.address: (place.lat, place.lon) if place.lat and place.lon else None
-            for place in Place.objects.all()
-        }
+
         orders = self.not_processed().prefetch_related(
             Prefetch('products_in_order', queryset=ProductInOrder.objects.select_related('product'))).annotate(
             order_price=(Sum(F('products_in_order__price') * F('products_in_order__quantity')))
         ).select_related('who_cook')
+        addresses = list(restaurants.values_list('address', flat=True))
+        addresses.extend(list(orders.values_list('address', flat=True)))
+
+        places = {
+            place.address: (place.lat, place.lon) if place.lat and place.lon else None
+            for place in Place.objects.filter(address__in=addresses)
+        }
 
         for order in orders:
             if order.who_cook:
