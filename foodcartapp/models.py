@@ -24,16 +24,14 @@ class RestaurantsQuerySet(models.QuerySet):
         restaurants_with_complete_set = []
         for restaurant in restaurants:
             restaurant_menu_products_pks = [
-                restaurant_menu.product.pk for restaurant_menu in restaurant.menu_restaurants.all()]
+                restaurant_menu.product.pk for restaurant_menu in restaurant.menu_restaurants.all() if
+                restaurant_menu.availability]
             for product_in_order in products_in_order:
                 if product_in_order.product.pk not in restaurant_menu_products_pks:
                     break
             else:
                 restaurants_with_complete_set.append(restaurant)
         return restaurants_with_complete_set
-
-    def available_product_restaurants(self):
-        return self.prefetch_products().filter(menu_restaurants__availability=True).distinct()
 
 
 class Restaurant(models.Model):
