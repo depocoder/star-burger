@@ -43,12 +43,10 @@ class Restaurant(models.Model):
     address = models.CharField(
         'адрес',
         max_length=100,
-        blank=True,
     )
     contact_phone = models.CharField(
         'контактный телефон',
         max_length=50,
-        blank=True,
     )
 
     objects = RestaurantsQuerySet.as_manager()
