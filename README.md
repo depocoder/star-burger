@@ -147,7 +147,7 @@ parcel build bundles-src/index.js --dist-dir bundles --public-url="./"
 
 - `DEBUG` — дебаг-режим. Поставьте `False`.
 - `YANDEX_API_KEY` — API ключ от яндекс гео-кодера.
-- `SECRET_KEY` — секретный ключ проекта. Он отвечает за шифрование на сайте. Например, им зашифрованы все пароли на вашем сайте. Не стоит использовать значение по-умолчанию, **замените на своё**.
+- `SECRET_KEY` — секретный ключ проекта. Он отвечает за шифрование на сайте. Например, им зашифрованы все пароли на вашем сайте.**.
 - `ALLOWED_HOSTS` — [см. документацию Django](https://docs.djangoproject.com/en/3.1/ref/settings/#allowed-hosts)
 
 За основу был взят код проекта [FoodCart](https://github.com/Saibharath79/FoodCart).
