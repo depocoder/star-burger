@@ -39,10 +39,10 @@
         {% if order.who_cook %}
           Готовит {{ order.who_cook }}
         {% else %}
-            {% for available_restaurant in order.available_restaurants %}
+            {% for serialized_restaurant in order.serialized_restaurants %}
               <details>
-                <summary>{{ available_restaurant.name}} - {{available_restaurant.repr_distance}}</summary>
-                {{ available_restaurant.address }}
+                <summary>{{ serialized_restaurant.name}} - {{serialized_restaurant.repr_distance}}</summary>
+                {{ serialized_restaurant.address }}
               </details>
 
             {% endfor %}

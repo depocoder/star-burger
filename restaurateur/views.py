@@ -115,8 +115,15 @@ def view_orders(request):
     places_to_create = []
 
     for order in orders:
+        products_in_order = order.products_in_order.all()
+        order.available_restaurants = Restaurant.objects.get_restaurants_with_order_products(
+            order.pk, restaurants, products_in_order
+        )
+
+    for order in orders:
         if order.who_cook:
             continue
+        order.serialized_restaurants = []
         if order.address in places:
             order_coordinates = places[order.address]
         else:
@@ -124,38 +131,30 @@ def view_orders(request):
             lat, lon = order_coordinates
             places_to_create.append(Place(address=order.address, lat=lat, lon=lon))
             places[order.address] = order_coordinates
-        products_in_order = order.products_in_order.all()
-        product_pks = [product_in_order.product.pk for product_in_order in products_in_order]
-        order.available_restaurants = list()
-        for restaurant in restaurants:
-            restaurant_menu = restaurant.menu_restaurants.all()
-            available_product_pks = [restaurant_menu.product.pk for restaurant_menu in restaurant_menu]
-            for product_pk in product_pks:
-                if product_pk not in available_product_pks:
-                    break
+        for restaurant in order.available_restaurants:
+            restaurant_address = restaurant.address
+            if restaurant_address in places:
+                restaurant_coordinates = places[restaurant_address]
             else:
-                restaurant_address = restaurant.address
-                if restaurant_address in places:
-                    restaurant_coordinates = places[restaurant_address]
-                else:
-                    restaurant_coordinates = fetch_coordinates(settings.YANDEX_API_KEY, restaurant_address)
-                    lat, lon = restaurant_coordinates
-                    places[restaurant.address] = restaurant_coordinates
-                    places_to_create.append(Place(address=restaurant_address, lat=lat, lon=lon))
-                if all(order_coordinates) and all(restaurant_coordinates):
-                    distance_km = distance(order_coordinates, restaurant_coordinates).km
-                    repr_distance = f"{distance_km} км"
-                else:
-                    distance_km = 0
-                    repr_distance = 'ошибка определения координат'
-                serialized_restaurant = {
-                    'distance_km': distance_km,
-                    'repr_distance': repr_distance,
-                    'address': restaurant_address,
-                    'name': restaurant.name,
-                }
-                order.available_restaurants.append(serialized_restaurant)
-        order.available_restaurants.sort(
+                restaurant_coordinates = fetch_coordinates(settings.YANDEX_API_KEY, restaurant_address)
+                lat, lon = restaurant_coordinates
+                places[restaurant.address] = restaurant_coordinates
+                places_to_create.append(Place(address=restaurant_address, lat=lat, lon=lon))
+            if all(order_coordinates) and all(restaurant_coordinates):
+                distance_km = distance(order_coordinates, restaurant_coordinates).km
+                repr_distance = f"{distance_km} км"
+            else:
+                distance_km = 0
+                repr_distance = 'ошибка определения координат'
+            serialized_restaurant = {
+                'distance_km': distance_km,
+                'repr_distance': repr_distance,
+                'address': restaurant_address,
+                'name': restaurant.name,
+            }
+            order.serialized_restaurants.append(serialized_restaurant)
+        del order.available_restaurants
+        order.serialized_restaurants.sort(
             key=lambda serialized_restaurant: int(serialized_restaurant['distance_km']))
     Place.objects.bulk_create(places_to_create)
 

@@ -11,23 +11,26 @@ class RestaurantsQuerySet(models.QuerySet):
             'menu_restaurants', queryset=RestaurantMenuItem.objects.select_related('product'))
         )
 
-    def get_restaurants_with_order_products(self, order_id: int) -> models.QuerySet:
-        restaurants = self.prefetch_products().order_by('name')
-        products = Product.objects.filter(
-            product_carts__order=order_id,
-        )
+    def get_restaurants_with_order_products(self, order_id: int, restaurants: models.QuerySet = None,
+                                            products_in_order: models.QuerySet = None,
+                                            ) -> []:
+        if restaurants is None:
+            restaurants = self.prefetch_products().order_by('name')
+        if products_in_order is None:
+            products_in_order = ProductInOrder.objects.filter(
+                order=order_id,
+            ).select_related('product')
 
         restaurants_with_complete_set = []
         for restaurant in restaurants:
             restaurant_menu_products_pks = [
                 restaurant_menu.product.pk for restaurant_menu in restaurant.menu_restaurants.all()]
-            for product in products:
-                if product.pk not in restaurant_menu_products_pks:
+            for product_in_order in products_in_order:
+                if product_in_order.product.pk not in restaurant_menu_products_pks:
                     break
             else:
-                restaurants_with_complete_set.append(restaurant.pk)
-
-        return restaurants.filter(id__in=restaurants_with_complete_set)
+                restaurants_with_complete_set.append(restaurant)
+        return restaurants_with_complete_set
 
     def available_product_restaurants(self):
         return self.prefetch_products().filter(menu_restaurants__availability=True).distinct()
