@@ -110,8 +110,7 @@ def view_orders(request):
     addresses = list(restaurants.values_list('address', flat=True))
     addresses.extend(list(orders.values_list('address', flat=True)))
     places = {
-        place.address: (place.lat, place.lon) if place.lat and place.lon else (None, None)
-        for place in Place.objects.filter(address__in=addresses)
+        place.address: (place.lat, place.lon) for place in Place.objects.filter(address__in=addresses)
     }
     places_to_create = []
 
