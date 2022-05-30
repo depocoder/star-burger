@@ -6,3 +6,4 @@ django-phonenumber-field[phonenumbers]>=5.0.0
 djangorestframework>=3.12.4
 requests>=2.27.1
 geopy>=2.2.0
+unicorn>=20.1.0
