@@ -70,7 +70,7 @@ python manage.py migrate
 python manage.py runserver
 ```
 
-Запуск сервера через uvicorn:
+Запуск сервера через gunicorn:
 
 ```sh
 gunicorn -b 0.0.0.0:80 star_burger.wsgi:application
