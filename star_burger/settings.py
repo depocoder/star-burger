@@ -1,7 +1,8 @@
 import os
+import re
 
+import rollbar
 import dj_database_url
-
 from environs import Env
 
 
@@ -33,6 +34,18 @@ INSTALLED_APPS = [
     'distances',
 ]
 
+ROLLBAR = {
+    'access_token': env('ROLLBAR_ACCESS_TOKEN'),
+    'environment': 'development' if DEBUG else 'production',
+    'root': BASE_DIR,
+    'ignorable_404_urls': (
+        re.compile('/'),
+    ),
+}
+
+rollbar.init(**ROLLBAR)
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -42,7 +55,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'rollbar.contrib.django.middleware.RollbarNotifierMiddleware',
 ]
+
+
 
 ROOT_URLCONF = 'star_burger.urls'
 
