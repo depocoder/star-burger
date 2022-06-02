@@ -36,14 +36,13 @@ INSTALLED_APPS = [
 
 ROLLBAR = {
     'access_token': env('ROLLBAR_ACCESS_TOKEN'),
-    'environment': 'development' if DEBUG else 'production',
+    'environment': env('ROLLBAR_ENVIRONMENT_NAME', 'unknown'),
     'root': BASE_DIR,
     'ignorable_404_urls': (
         re.compile('/'),
     ),
 }
 
-rollbar.init(**ROLLBAR)
 
 
 MIDDLEWARE = [
