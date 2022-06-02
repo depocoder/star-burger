@@ -151,6 +151,8 @@ parcel build bundles-src/index.js --dist-dir bundles --public-url="./"
 
 Настроить бэкенд: создать файл `.env` в каталоге `star_burger/` со следующими настройками:
 
+- `ROLLBAR_ENVIRONMENT_NAME` — в Rollbar задаёт название окружения или инсталляции сайта.
+- `ROLLBAR_ACCESS_TOKEN` — API ключ от [rollbar](https://rollbar.com/), находится в ваших проектах.
 - `DEBUG` — дебаг-режим. Поставьте `False`.
 - `YANDEX_API_KEY` — API ключ от яндекс гео-кодера.
 - `SECRET_KEY` — секретный ключ проекта. Он отвечает за шифрование на сайте. Например, им зашифрованы все пароли на вашем сайте.**.
