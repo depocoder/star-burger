@@ -58,6 +58,22 @@ python -m venv venv
 pip install -r requirements.txt
 ```
 
+Установите postgres на ваш компьютер:
+```shell
+sudo apt-get update
+sudo apt-get install python-pip python-dev libpq-dev postgresql postgresql-contrib
+```
+Создайте БД:
+```shell
+sudo su - postgres
+psql
+
+# тут создаете базу данных
+```
+Можете скопировать из `sql/init.sql` команды по созданию БД
+
+
+
 Создайте файл базы данных SQLite и отмигрируйте её следующей командой:
 
 ```sh
@@ -153,6 +169,10 @@ parcel build bundles-src/index.js --dist-dir bundles --public-url="./"
 
 - `ROLLBAR_ENVIRONMENT_NAME` — в Rollbar задаёт название окружения или инсталляции сайта.
 - `ROLLBAR_ACCESS_TOKEN` — API ключ от [rollbar](https://rollbar.com/), находится в ваших проектах.
+- `POSTGRES_USER` — Логин от postgres user'а.
+- `POSTGRES_PASSWORD` — Пароль от postgres user'а.
+- `POSTGRES_HOST` — Адрес от postgres.
+- `POSTGRES_PORT` — Порт от postgres.
 - `DEBUG` — дебаг-режим. Поставьте `False`.
 - `YANDEX_API_KEY` — API ключ от яндекс гео-кодера.
 - `SECRET_KEY` — секретный ключ проекта. Он отвечает за шифрование на сайте. Например, им зашифрованы все пароли на вашем сайте.**.

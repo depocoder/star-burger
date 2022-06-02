@@ -44,7 +44,6 @@ ROLLBAR = {
 }
 
 
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -99,9 +98,16 @@ WSGI_APPLICATION = 'star_burger.wsgi.application'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
+
+POSTGRES_USER = env('POSTGRES_USER', 'some_user')
+POSTGRES_PASSWORD = env('POSTGRES_PASSWORD', 'P@ssw0rd')
+POSTGRES_HOST = env('POSTGRES_HOST', 'localhost')
+POSTGRES_PORT = env('POSTGRES_PORT', '5432')
+
+
 DATABASES = {
     'default': dj_database_url.config(
-        default='sqlite:////{0}'.format(os.path.join(BASE_DIR, 'db.sqlite3'))
+        default=f'postgres://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/star_burger'
     )
 }
 
