@@ -100,7 +100,6 @@ def view_restaurants(request):
 
 @user_passes_test(is_manager, login_url='restaurateur:login')
 def view_orders(request):
-    raise TypeError('sosi')
     restaurants = Restaurant.objects.prefetch_products()
 
     orders = Order.objects.not_processed().prefetch_related(
