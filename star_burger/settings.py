@@ -1,9 +1,9 @@
 import os
 import re
 
-import rollbar
 import dj_database_url
 from environs import Env
+from git import Repo
 
 
 env = Env()
@@ -34,10 +34,14 @@ INSTALLED_APPS = [
     'distances',
 ]
 
+LOCAL_REPO = Repo(path=BASE_DIR)
+LOCAL_BRANCH = LOCAL_REPO.active_branch.name
+
 ROLLBAR = {
     'access_token': env('ROLLBAR_ACCESS_TOKEN'),
     'environment': env('ROLLBAR_ENVIRONMENT_NAME', 'unknown'),
     'root': BASE_DIR,
+    'branch': LOCAL_BRANCH,
     'ignorable_404_urls': (
         re.compile('/'),
     ),
@@ -57,8 +61,8 @@ MIDDLEWARE = [
 ]
 
 
-
 ROOT_URLCONF = 'star_burger.urls'
+
 
 DEBUG_TOOLBAR_PANELS = [
     'debug_toolbar.panels.versions.VersionsPanel',
