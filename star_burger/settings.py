@@ -112,7 +112,11 @@ POSTGRES_PORT = env('POSTGRES_PORT', '5432')
 DATABASES = {
     'default': dj_database_url.config(
         default=f'postgres://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/star_burger'
-    )
+    ),
+    'TEST': {
+        'CHARSET': 'utf8',
+        'COLLATION': 'utf8_general_ci',
+    }
 }
 
 AUTH_PASSWORD_VALIDATORS = [
