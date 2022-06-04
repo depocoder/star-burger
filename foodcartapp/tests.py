@@ -8,9 +8,6 @@ from django.contrib.auth.models import User
 from rest_framework.test import APITransactionTestCase
 
 
-
-
-
 class TestRegisterOrder(APITransactionTestCase):
     endpoint = '/api/order/'
     is_logined = False
