@@ -2,7 +2,6 @@ bundles/**
 node_modules/
 media/
 staticfiles/
-deploy_star_burger.sh
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

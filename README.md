@@ -73,7 +73,6 @@ psql
 Можете скопировать из `sql/init.sql` команды по созданию БД
 
 
-
 Создайте файл базы данных SQLite и отмигрируйте её следующей командой:
 
 ```sh
@@ -118,7 +117,7 @@ npm --version
 Установите необходимые пакеты. В каталоге проекта запустите:
 
 ```sh
-npm install --dev
+npm install --also=dev
 ```
 
 Установите [Parcel](https://parceljs.org/). Это упаковщик веб-приложений. Он похож на [Webpack](https://webpack.js.org/), но совсем не требует настроек:
@@ -177,5 +176,12 @@ parcel build bundles-src/index.js --dist-dir bundles --public-url="./"
 - `YANDEX_API_KEY` — API ключ от яндекс гео-кодера.
 - `SECRET_KEY` — секретный ключ проекта. Он отвечает за шифрование на сайте. Например, им зашифрованы все пароли на вашем сайте.**.
 - `ALLOWED_HOSTS` — [см. документацию Django](https://docs.djangoproject.com/en/3.1/ref/settings/#allowed-hosts)
+
+# Как быстро обновить код на сервере?
+В репозитории есть заготовка для быстрого обновления кода. Сервис с Django перезапускается за счет systemctl 
+
+```shell
+./deploy_star_burger.sh
+```
 
 За основу был взят код проекта [FoodCart](https://github.com/Saibharath79/FoodCart).
