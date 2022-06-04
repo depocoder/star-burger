@@ -5,7 +5,6 @@ import dj_database_url
 from environs import Env
 from git import Repo
 
-
 env = Env()
 env.read_env()
 
@@ -47,7 +46,6 @@ ROLLBAR = {
     ),
 }
 
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -60,9 +58,7 @@ MIDDLEWARE = [
     'rollbar.contrib.django.middleware.RollbarNotifierMiddleware',
 ]
 
-
 ROOT_URLCONF = 'star_burger.urls'
-
 
 DEBUG_TOOLBAR_PANELS = [
     'debug_toolbar.panels.versions.VersionsPanel',
@@ -102,12 +98,10 @@ WSGI_APPLICATION = 'star_burger.wsgi.application'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-
 POSTGRES_USER = env('POSTGRES_USER', 'some_user')
 POSTGRES_PASSWORD = env('POSTGRES_PASSWORD', 'P@ssw0rd')
 POSTGRES_HOST = env('POSTGRES_HOST', 'localhost')
 POSTGRES_PORT = env('POSTGRES_PORT', '5432')
-
 
 DATABASES = {
     'default': dj_database_url.config(
@@ -149,7 +143,6 @@ STATIC_URL = '/static/'
 INTERNAL_IPS = [
     '127.0.0.1'
 ]
-
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "assets"),
