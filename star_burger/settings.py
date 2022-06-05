@@ -9,7 +9,8 @@ env = Env()
 env.read_env()
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_DIR_NAME = env('STATIC_DIR_NAME', 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, STATIC_DIR_NAME)
 
 YANDEX_API_KEY = os.getenv('YANDEX_API_KEY')
 

@@ -1,0 +1,47 @@
+version: "3"
+
+volumes:
+  frontend_data:
+  media:
+  
+
+services:
+  web:
+    build:
+        context: .
+        dockerfile: ./etc/backend/Dockerfile
+    image: "star_burger_web:latest"
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_HOST=db
+      - STATIC_DIR_NAME=frontend
+    volumes:
+      - frontend_data:/code/frontend
+      - media:/code/media
+
+  db:
+    env_file:
+      - .env
+    image: "postgres:14.3-bullseye"
+    environment:
+      - POSTGRES_DB=star_burger
+
+  frontend:
+    build:
+      context: .
+      dockerfile: ./etc/frontend/Dockerfile
+    image: star_burger_frontend:latest
+    volumes:
+      - frontend_data:/frontend
+
+  nginx:
+    image: "nginx:stable"
+    volumes:
+      - frontend_data:/frontend
+      - media:/media
+      - ./etc/nginx/conf.d:/etc/nginx/conf.d
+    ports:
+      - 8000:80
+    depends_on:
+      - web
