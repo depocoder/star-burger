@@ -185,7 +185,7 @@ parcel build bundles-src/index.js --dist-dir bundles --public-url="./"
 - `SECRET_KEY` — секретный ключ проекта. Он отвечает за шифрование на сайте. Например, им зашифрованы все пароли на вашем сайте.**.
 - `ALLOWED_HOSTS` — [см. документацию Django](https://docs.djangoproject.com/en/3.1/ref/settings/#allowed-hosts)
 
-# Как быстро обновить код на сервере?
+## Как быстро обновить код на сервере?
 В репозитории есть заготовка для быстрого обновления кода. Сервис с Django перезапускается за счет systemctl 
 
 ```shell
