@@ -46,18 +46,24 @@ python --version
 
 Возможно, вместо команды `python` здесь и в остальных инструкциях этого README придётся использовать `python3`. Зависит это от операционной системы и от того, установлен ли у вас Python старой второй версии. 
 
-В каталоге проекта создайте виртуальное окружение:
+Установите poetry
 ```sh
-python -m venv venv
+curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python3 -
 ```
-Активируйте его. На разных операционных системах это делается разными командами:
-- Windows: `.\venv\Scripts\activate`
-- MacOS/Linux: `source venv/bin/activate`
 
+В конец файла ~/.bashrc добавьте и исполните её в терминале
+```shell
+source $HOME/.poetry/env
+```
 
-Установите зависимости в виртуальное окружение:
+Установите зависимости в виртуальное окружение poetry:
 ```sh
-pip install -r requirements.txt
+poetry install
+```
+
+Активируйте виртуальное.
+```shell
+poetry shell
 ```
 
 Установите postgres на ваш компьютер:
@@ -75,7 +81,7 @@ psql
 Можете скопировать из `sql/init.sql` команды по созданию БД
 
 
-Создайте файл базы данных SQLite и отмигрируйте её следующей командой:
+Проведите миграции данных
 
 ```sh
 python manage.py migrate

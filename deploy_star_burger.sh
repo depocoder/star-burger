@@ -5,7 +5,7 @@ source .env
 echo 'start git pull'
 git pull
 echo 'install py deps'
-venv/bin/python3 -m pip install -r requirements.txt
+poetry install
 echo 'install node deps'
 npm install --also=dev
 npm audit fix
