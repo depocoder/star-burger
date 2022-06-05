@@ -11,12 +11,14 @@ npm install --also=dev
 npm audit fix
 echo 'run parcel build'
 parcel build bundles-src/index.js --dist-dir bundles --public-url="./"
+echo 'activate poetry venv'
+poetry shell
 echo 'run collectstatic'
-venv/bin/python3 manage.py collectstatic --no-input
+python3 manage.py collectstatic --no-input
 echo 'run migrate'
-venv/bin/python3 manage.py migrate
+python3 manage.py migrate
 echo 'run tests'
-venv/bin/python3 manage.py test --keepdb
+python3 manage.py test --keepdb
 echo 'restart start-burger'
 sudo systemctl restart star-burger.service
 
