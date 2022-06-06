@@ -16,7 +16,7 @@ poetry run python manage.py collectstatic --no-input
 echo 'run migrate'
 poetry run python manage.py migrate  --no-input
 echo 'run tests'
-poetry run python manage.py test --keepdb
+poetry run python manage.py test
 echo 'restart start-burger'
 sudo systemctl restart star-burger.service
 
