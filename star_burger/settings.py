@@ -37,13 +37,6 @@ INSTALLED_APPS = [
 LOCAL_REPO = Repo(path=BASE_DIR)
 LOCAL_BRANCH = LOCAL_REPO.active_branch.name
 
-ROLLBAR = {
-    'access_token': env('ROLLBAR_ACCESS_TOKEN'),
-    'environment': env('ROLLBAR_ENVIRONMENT_NAME', 'unknown'),
-    'root': BASE_DIR,
-    'branch': LOCAL_BRANCH,
-}
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -53,8 +46,17 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'rollbar.contrib.django.middleware.RollbarNotifierMiddlewareExcluding404',
 ]
+
+ROLLBAR_ACCESS_TOKEN = env('ROLLBAR_ACCESS_TOKEN', '')
+if ROLLBAR_ACCESS_TOKEN:
+    ROLLBAR = {
+        'access_token': ROLLBAR_ACCESS_TOKEN,
+        'environment': env('ROLLBAR_ENVIRONMENT_NAME', 'unknown'),
+        'root': BASE_DIR,
+        'branch': LOCAL_BRANCH,
+    }
+    MIDDLEWARE.append('rollbar.contrib.django.middleware.RollbarNotifierMiddlewareExcluding404')
 
 ROOT_URLCONF = 'star_burger.urls'
 
