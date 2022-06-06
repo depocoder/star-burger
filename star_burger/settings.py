@@ -42,9 +42,6 @@ ROLLBAR = {
     'environment': env('ROLLBAR_ENVIRONMENT_NAME', 'unknown'),
     'root': BASE_DIR,
     'branch': LOCAL_BRANCH,
-    'ignorable_404_urls': (
-        re.compile('/'),
-    ),
 }
 
 MIDDLEWARE = [
@@ -56,7 +53,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'rollbar.contrib.django.middleware.RollbarNotifierMiddleware',
+    'rollbar.contrib.django.middleware.RollbarNotifierMiddlewareExcluding404',
 ]
 
 ROOT_URLCONF = 'star_burger.urls'
