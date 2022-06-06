@@ -12,11 +12,11 @@ npm audit fix
 echo 'run parcel build'
 parcel build bundles-src/index.js --dist-dir bundles --public-url="./"
 echo 'run collectstatic'
-$(poetry env info --path)/bin/python manage.py collectstatic --no-input
+poetry run python manage.py collectstatic --no-input
 echo 'run migrate'
-$(poetry env info --path)/bin/python manage.py migrate
+poetry run python manage.py migrate  --no-input
 echo 'run tests'
-$(poetry env info --path)/bin/python manage.py test --keepdb
+poetry run python manage.py test --keepdb
 echo 'restart start-burger'
 sudo systemctl restart star-burger.service
 
