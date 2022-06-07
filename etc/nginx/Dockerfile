@@ -20,7 +20,7 @@ RUN ln -s /etc/nginx/sites-available/local.conf /etc/nginx/sites-enabled/local.c
 WORKDIR /etc/nginx
 
 # add entrypoing
-ADD docker-entrypoint.sh .
+ADD etc/nginx/docker-entrypoint.sh .
 
 # make certs dir as volume
 VOLUME ["/etc/letsencrypt"]
