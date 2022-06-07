@@ -1,4 +1,4 @@
-FROM python:3.9
+FROM python:3.9.13-slim-buster
 
 ENV POETRY_VERSION=1.1.13 \
     POETRY_VIRTUALENVS_CREATE=false \
