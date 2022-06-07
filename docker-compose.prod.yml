@@ -23,9 +23,6 @@ services:
     volumes:
       - frontend_data:/frontend
       - media:/media
-      - ~/etc/nginx/conf.d/prod.conf:/etc/nginx/conf.d/prod.conf
     ports:
       - "80:80"
       - "443:443"
-    depends_on:
-      - web
