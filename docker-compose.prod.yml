@@ -13,13 +13,13 @@ services:
     restart: always
 
   frontend:
-    restart: always
+    restart: on-failure
 
   nginx:
     image: "depocoder/nginx_certbot:0.1"
     build:
       context: .
-      dockerfile: ./etc/frontend/Dockerfile
+      dockerfile: ./etc/nginx/Dockerfile
     volumes:
       - frontend_data:/frontend
       - media:/media
