@@ -45,3 +45,5 @@ services:
     volumes:
       - frontend_data:/frontend
       - media:/media
+    depends_on:
+      - web
