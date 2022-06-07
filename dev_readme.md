@@ -77,6 +77,12 @@ python manage.py migrate
 python manage.py runserver
 ```
 
+## Запуск тестов
+```shell
+python manage.py test
+```
+
+
 Запуск сервера через gunicorn:
 
 ```sh
