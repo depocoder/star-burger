@@ -8,7 +8,8 @@ echo 'build images'
 docker-compose -f docker-compose.yml -f docker-compose.prod.yml build
 
 echo 'restart containers'
-docker-compose -f docker-compose.yml -f docker-compose.prod.yml restart
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml down
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 echo 'migrate'
 docker exec star_burger_web "python" "manage.py" "migrate" "--no-input"
 
