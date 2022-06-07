@@ -32,9 +32,6 @@ WORKDIR /etc/nginx
 # add entrypoing
 ADD etc/nginx/docker-entrypoint.sh .
 
-# make certs dir as volume
-VOLUME ["/etc/letsencrypt"]
-
 RUN chmod +x docker-entrypoint.sh
 
 CMD ["/etc/nginx/docker-entrypoint.sh"]

@@ -1,8 +1,9 @@
 version: "3.9"
 
 volumes:
-  frontend_data:
-  media:
+  letsencrypt_data:
+  nginx_confs:
+
 
 
 services:
@@ -28,3 +29,6 @@ services:
       dockerfile: ./etc/nginx/Dockerfile
     ports:
       - "443:443"
+    volumes:
+      - letsencrypt_data:/etc/letsencrypt/
+      - nginx_confs:/etc/nginx/sites-available
