@@ -32,6 +32,11 @@ docker exec star_burger_web "python" "manage.py" "migrate" "--no-input"
 ./docker_deploy.sh
 ```
 
+## Запуск тестов
+```shell
+docker exec star_burger_web "python" "manage.py" "test"
+```
+
 Теперь можете зайти адрес по домену на сервер у меня это  [https://starburger.depocoder.xyz/](https://starburger.depocoder.xyz/)
 
 ![](https://i.imgur.com/6eIGuKj.png)
