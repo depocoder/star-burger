@@ -1,5 +1,18 @@
 FROM ubuntu:18.04
 
+# add nginx staging conf
+ADD etc/nginx/conf.d/local.conf /etc/nginx/sites-available/local.conf
+
+# create symlinks
+RUN ln -s /etc/nginx/sites-available/local.conf /etc/nginx/sites-enabled/local.conf
+
+# work dir
+WORKDIR /etc/nginx
+
+# add entrypoing
+ADD etc/nginx/docker-entrypoint.sh .
+RUN chmod +x docker-entrypoint.sh
+
 # install nginx
 RUN apt-get update -y
 RUN apt-get install -y software-properties-common
@@ -19,19 +32,5 @@ RUN rm /etc/nginx/sites-enabled/default
 
 # expose ports
 EXPOSE 80 443
-
-# add nginx staging conf
-ADD etc/nginx/conf.d/local.conf /etc/nginx/sites-available/local.conf
-
-# create symlinks
-RUN ln -s /etc/nginx/sites-available/local.conf /etc/nginx/sites-enabled/local.conf
-
-# work dir
-WORKDIR /etc/nginx
-
-# add entrypoing
-ADD etc/nginx/docker-entrypoint.sh .
-
-RUN chmod +x docker-entrypoint.sh
 
 CMD ["/etc/nginx/docker-entrypoint.sh"]
