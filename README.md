@@ -17,6 +17,8 @@
 
 ## [Запуск без Docker](https://github.com/depocoder/star-burger/blob/main/DEV_README.md)
 
+## [Deploy with Docker & HTTPS](https://github.com/depocoder/star-burger/blob/main/DOCKER_DEPLOY_README.md)
+
 ## Установите [Docker и Docker-compose](https://www.howtogeek.com/devops/how-to-install-docker-and-docker-compose-on-linux/)
 
 # Соберите docker image's
@@ -29,14 +31,15 @@ docker-compose -f docker-compose.yml -f docker-compose.dev.yml build
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 ```
 
+Проведите миграции
 ```shell
-docker exec star_burger_web "python" "manage.py" "migrate"
+docker exec star_burger_web "python" "manage.py" "migrate" "--no-input"
 docker exec star_burger_web "python" "manage.py" "create_admin"
 ```
 > Логин от админки - `admin`, пароль - `123456` 
 
 
-Теперь если зайти на страницу  [http://127.0.0.1:8000/](http://127.0.0.1:8000/), то вместо пустой страницы вы увидите:
+Теперь можете зайти на страницу  [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
 
 ![](https://i.imgur.com/AOP6G4c.png)
 
