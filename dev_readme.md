@@ -71,8 +71,6 @@ psql
 python manage.py migrate
 ```
 
-
-
 Запустите сервер:
 
 ```sh

@@ -31,5 +31,12 @@ docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 docker exec star_burger_web "python" "manage.py" "migrate"
 docker exec star_burger_web "python" "manage.py" "create_admin"
 ```
+> Логин от админки - `admin`, пароль - `123456` 
+
+
+Теперь если зайти на страницу  [http://127.0.0.1:8000/](http://127.0.0.1:8000/), то вместо пустой страницы вы увидите:
+
+![](https://i.imgur.com/AOP6G4c.png)
+
 
 За основу был взят код проекта [FoodCart](https://github.com/Saibharath79/FoodCart).
