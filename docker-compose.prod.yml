@@ -28,4 +28,3 @@ services:
       dockerfile: ./etc/nginx/Dockerfile
     ports:
       - "443:443"
-      - "80:80"

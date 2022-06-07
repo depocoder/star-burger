@@ -42,6 +42,8 @@ services:
   nginx:
     container_name: star_burger_nginx
     image: "nginx:stable"
+    ports:
+      - "80:80"
     volumes:
       - frontend_data:/frontend
       - media:/media

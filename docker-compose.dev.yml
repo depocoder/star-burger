@@ -2,17 +2,18 @@ version: "3.9"
 
 
 services:
+  web:
+    command: bash -c 'python manage.py collectstatic --no-input &&
+      python -m gunicorn -b 0.0.0.0:8080 star_burger.wsgi:application'
+
   db:
     image: "postgres:14.3-bullseye"
     volumes:
       - pg_data:/var/lib/postgresql/data
-      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql # Создаёт БД и роль, если БД пуста
-
-  frontend:
-    command: bash -c 'parcel build bundles-src/index.js --dist-dir bundles --public-url="./"'
+    environment:
+      - POSTGRES_USER=some_user
+      - POSTGRES_PASSWORD=P@ssw0rd
 
   nginx:
-    ports:
-      - "8000:80"
-    volumes:
-      - ./etc/nginx/conf.d:/etc/nginx/conf.d
+      volumes:
+        - ./etc/nginx/conf.d:/etc/nginx/conf.d
