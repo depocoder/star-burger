@@ -7,8 +7,6 @@
 docker build -f etc/nginx/Dockerfile -t depocoder/nginx_certbot:0.1 .
 ```
 
-## Запустите nginx docker
-
 ## Войдите в nginx container
 docker exec -it nginx bash
 
