@@ -1,7 +1,5 @@
 FROM ubuntu:18.04
 
-MAINTAINER Eranga Bandara (erangaeb@gmail.com)
-
 # install nginx
 RUN apt-get update -y
 RUN apt-get install -y software-properties-common
@@ -13,6 +11,7 @@ RUN apt-get install -y nginx
 RUN add-apt-repository ppa:certbot/certbot
 RUN apt-get update -y
 RUN apt-get install -y certbot python-certbot-nginx
+
 # deamon mode off
 RUN echo "\ndaemon off;" >> /etc/nginx/nginx.conf
 RUN chown -R www-data:www-data /var/lib/nginx
