@@ -19,6 +19,8 @@ services:
     volumes:
       - frontend_data:/code/frontend
       - media:/code/media
+    depends_on:
+      - db
 
   db:
     env_file:
@@ -40,8 +42,8 @@ services:
     volumes:
       - frontend_data:/frontend
       - media:/media
-      - ./etc/nginx/conf.d:/etc/nginx/conf.d
+      - ~/etc/nginx/conf.d/prod.conf:/etc/nginx/conf.d/local.conf
     ports:
-      - 80:80
+      - "80:80"
     depends_on:
       - web

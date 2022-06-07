@@ -1,0 +1,31 @@
+version: "3.9"
+
+volumes:
+  frontend_data:
+  media:
+
+
+services:
+  web:
+    restart: always
+
+  db:
+    restart: always
+
+  frontend:
+    restart: always
+
+  nginx:
+    image: "depocoder/nginx_certbot:0.1"
+    build:
+      context: .
+      dockerfile: ./etc/frontend/Dockerfile
+    volumes:
+      - frontend_data:/frontend
+      - media:/media
+      - ~/etc/nginx/conf.d/prod.conf:/etc/nginx/conf.d/prod.conf
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - web
