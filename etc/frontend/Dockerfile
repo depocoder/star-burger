@@ -1,5 +1,4 @@
-FROM node:12.22.12-buster
-
+FROM node:12.22-buster-slim
 
 WORKDIR /frontend
 
