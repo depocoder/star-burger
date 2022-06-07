@@ -42,7 +42,7 @@ services:
     volumes:
       - frontend_data:/frontend
       - media:/media
-      - ~/etc/nginx/conf.d/prod.conf:/etc/nginx/conf.d/local.conf
+      - ./etc/nginx/conf.d:/etc/nginx/conf.d
     ports:
       - "80:80"
     depends_on:
