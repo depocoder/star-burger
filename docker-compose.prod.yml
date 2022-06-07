@@ -8,8 +8,14 @@ volumes:
 services:
   web:
     restart: always
+    env_file:
+      - .env
+    environment:
+      - DEBUG=false
 
   db:
+    env_file:
+      - .env
     restart: always
 
   frontend:
@@ -20,9 +26,5 @@ services:
     build:
       context: .
       dockerfile: ./etc/nginx/Dockerfile
-    volumes:
-      - frontend_data:/frontend
-      - media:/media
     ports:
-      - "80:80"
       - "443:443"
