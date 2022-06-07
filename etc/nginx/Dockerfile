@@ -16,6 +16,7 @@ RUN apt-get install -y certbot python-certbot-nginx
 # deamon mode off
 RUN echo "\ndaemon off;" >> /etc/nginx/nginx.conf
 RUN chown -R www-data:www-data /var/lib/nginx
+RUN rm /etc/nginx/sites-enabled/default
 
 # expose ports
 EXPOSE 80 443
