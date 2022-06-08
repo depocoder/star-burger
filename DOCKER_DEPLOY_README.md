@@ -2,13 +2,16 @@
 
 Купите домен и отправляйте все запросы ip вашего сервера
 
-## Сборка nginx docker
+## Запустите контейнеры
+> При первом запуске будет build images
 ```shell
-docker build -f etc/nginx/Dockerfile -t depocoder/nginx_certbot:0.1 .
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 ```
 
 ## Войдите в nginx container
+```
 docker exec -it nginx bash
+```
 
 ## Создайте сертификаты
 > Обратите внимание, что я указал свою почту и свой домен
