@@ -27,6 +27,11 @@ certbot --nginx --email ma1n.py@ya.ru --agree-tos --no-eff-email -d starburger.d
 docker exec star_burger_web "python" "manage.py" "migrate" "--no-input"
 ```
 
+Теперь можете зайти адрес по домену на сервер у меня это  [https://starburger.depocoder.xyz/](https://starburger.depocoder.xyz/)
+
+![](https://i.imgur.com/6eIGuKj.png)
+
+
 ## Как быстро обновить код на сервере?
 В репозитории есть заготовка для быстрого обновления кода.
 ```shell
@@ -37,8 +42,4 @@ docker exec star_burger_web "python" "manage.py" "migrate" "--no-input"
 ```shell
 docker exec star_burger_web "python" "manage.py" "test"
 ```
-
-Теперь можете зайти адрес по домену на сервер у меня это  [https://starburger.depocoder.xyz/](https://starburger.depocoder.xyz/)
-
-![](https://i.imgur.com/6eIGuKj.png)
 
