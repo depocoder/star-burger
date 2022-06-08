@@ -2,7 +2,7 @@
 
 Это сайт сети ресторанов Star Burger. Здесь можно заказать превосходные бургеры с доставкой на дом.
 
-Ознакомиться с сайтом можете тут https://star.depocoder.xyz/
+Ознакомиться с сайтом можете тут https://starburger.depocoder.xyz/
 
 ![скриншот сайта](https://i.imgur.com/wBAHlDb.png)
 
