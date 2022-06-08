@@ -21,17 +21,13 @@
 
 ## Установите [Docker и Docker-compose](https://www.howtogeek.com/devops/how-to-install-docker-and-docker-compose-on-linux/)
 
-# Соберите docker image's
-```shell
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml build
-```
-
-# Запустите dev версию
+## Запустите dev версию
+> При первом запуске будет build images
 ```shell
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 ```
 
-Проведите миграции
+## Проведите миграции
 ```shell
 docker exec star_burger_web "python" "manage.py" "migrate" "--no-input"
 docker exec star_burger_web "python" "manage.py" "create_admin"
