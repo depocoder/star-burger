@@ -5,6 +5,9 @@ services:
   web:
     command: bash -c 'python manage.py collectstatic --no-input &&
       python -m gunicorn -b 0.0.0.0:8080 star_burger.wsgi:application'
+    environment:
+      - SECRET_KEY=DebugSecretKey
+        DEBUG=true
 
   db:
     image: "postgres:14.3-bullseye"
