@@ -27,7 +27,7 @@
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 ```
 
-## Проведите миграции
+## Проведите миграции && создайте админ пользователя
 ```shell
 docker exec star_burger_web "python" "manage.py" "migrate" "--no-input"
 docker exec star_burger_web "python" "manage.py" "create_admin"
