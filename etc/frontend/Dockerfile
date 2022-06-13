@@ -6,6 +6,6 @@ COPY package.json package-lock.json /frontend/
 
 RUN npm install --also=dev && npm audit fix
 
-COPY bundles/ /frontend/bundles/
+COPY bundles-src/ /frontend/bundles-src/
 
-RUN /frontend/node_modules/.bin/parcel build bundles/index.js --dist-dir bundles --public-url="./"
+RUN /frontend/node_modules/.bin/parcel build bundles-src/index.js --dist-dir bundles --public-url="./"
