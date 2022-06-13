@@ -43,5 +43,18 @@ docker exec star_burger_web "python" "manage.py" "create_admin"
 
 ![](https://i.imgur.com/AOP6G4c.png)
 
+## Настроить бэкенд: создать файл `.env` в каталоге `star_burger/` со следующими настройками:
+
+- `ROLLBAR_ENVIRONMENT_NAME` — в Rollbar задаёт название окружения или инсталляции сайта.
+- `ROLLBAR_ACCESS_TOKEN` — API ключ от [rollbar](https://rollbar.com/), находится в ваших проектах.
+- `POSTGRES_USER` — Логин от postgres user'а.
+- `POSTGRES_PASSWORD` — Пароль от postgres user'а.
+- `POSTGRES_HOST` — Адрес от postgres.
+- `POSTGRES_PORT` — Порт от postgres.
+- `DEBUG` — дебаг-режим. Поставьте `False`.
+- `YANDEX_API_KEY` — API ключ от яндекс гео-кодера.
+- `SECRET_KEY` — секретный ключ проекта. Он отвечает за шифрование на сайте. Например, им зашифрованы все пароли на вашем сайте.**.
+- `ALLOWED_HOSTS` — [см. документацию Django](https://docs.djangoproject.com/en/3.1/ref/settings/#allowed-hosts)
+- `STATIC_DIR_NAME` - Название директории с статикой
 
 За основу был взят код проекта [FoodCart](https://github.com/Saibharath79/FoodCart).
