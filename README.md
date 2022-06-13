@@ -28,7 +28,7 @@
 ## Запустите контейнеры
 > При первом запуске будет build images
 ```shell
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+docker-compose -f docker-compose.yml -f docker-compose.local.yml up -d
 ```
 
 ## Проведите миграции && создайте админ пользователя

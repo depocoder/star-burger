@@ -5,7 +5,7 @@
 ## Запустите контейнеры
 > При первом запуске будет build images
 ```shell
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d
 ```
 
 ## Войдите в nginx container
