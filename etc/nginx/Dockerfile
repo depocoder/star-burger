@@ -13,9 +13,6 @@ RUN apt-get update -y &&  \
     chown -R www-data:www-data /var/lib/nginx &&  \
     rm /etc/nginx/sites-enabled/default
 
-# expose ports
-EXPOSE 80 443
-
 # add nginx staging conf
 ADD etc/nginx/conf.d/local.conf /etc/nginx/sites-available/local.conf
 
