@@ -2,13 +2,16 @@
 
 Купите домен и отправляйте все запросы ip вашего сервера
 
-## Сборка nginx docker
+## Запустите контейнеры
+> При первом запуске будет build images
 ```shell
-docker build -f etc/nginx/Dockerfile -t depocoder/nginx_certbot:0.1 .
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 ```
 
 ## Войдите в nginx container
-docker exec -it nginx bash
+```
+docker exec -it star_burger_nginx bash
+```
 
 ## Создайте сертификаты
 > Обратите внимание, что я указал свою почту и свой домен
@@ -24,6 +27,11 @@ certbot --nginx --email ma1n.py@ya.ru --agree-tos --no-eff-email -d starburger.d
 docker exec star_burger_web "python" "manage.py" "migrate" "--no-input"
 ```
 
+Теперь можете зайти адрес по домену на сервер у меня это  [https://starburger.depocoder.xyz/](https://starburger.depocoder.xyz/)
+
+![](https://i.imgur.com/6eIGuKj.png)
+
+
 ## Как быстро обновить код на сервере?
 В репозитории есть заготовка для быстрого обновления кода.
 ```shell
@@ -34,8 +42,4 @@ docker exec star_burger_web "python" "manage.py" "migrate" "--no-input"
 ```shell
 docker exec star_burger_web "python" "manage.py" "test"
 ```
-
-Теперь можете зайти адрес по домену на сервер у меня это  [https://starburger.depocoder.xyz/](https://starburger.depocoder.xyz/)
-
-![](https://i.imgur.com/6eIGuKj.png)
 
