@@ -39,12 +39,13 @@ docker exec star_burger_web "python" "manage.py" "migrate" "--no-input"
 docker exec star_burger_web "python" "manage.py" "test"
 ```
 
+## Cоздайте админ пользователя
 > Логин от админки - `admin`, пароль - `123456` 
 ```shell
 docker exec star_burger_web "python" "manage.py" "create_admin"
 ```
 
-## Cоздайте админ пользователя
+
 
 Теперь можете зайти на страницу  [http://127.0.0.1:80/](http://127.0.0.1:80/)
 
