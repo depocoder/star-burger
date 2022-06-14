@@ -29,13 +29,22 @@
 docker-compose -f docker-compose.local.yml up -d
 ```
 
-## Проведите миграции && создайте админ пользователя
+## Проведите миграции
 ```shell
 docker exec star_burger_web "python" "manage.py" "migrate" "--no-input"
+```
+
+## Запуск тестов
+```shell
+docker exec star_burger_web "python" "manage.py" "test"
+```
+
+> Логин от админки - `admin`, пароль - `123456` 
+```shell
 docker exec star_burger_web "python" "manage.py" "create_admin"
 ```
-> Логин от админки - `admin`, пароль - `123456` 
 
+## Cоздайте админ пользователя
 
 Теперь можете зайти на страницу  [http://127.0.0.1:80/](http://127.0.0.1:80/)
 
