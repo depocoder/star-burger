@@ -23,7 +23,9 @@
 
 [Ссылка на инструкцию](https://github.com/depocoder/star-burger/blob/main/DOCKER_DEPLOY_README.md)
 
-## Установите [Docker и Docker-compose](https://www.howtogeek.com/devops/how-to-install-docker-and-docker-compose-on-linux/)
+## Установите Docker и Docker-compose
+
+[Ссылка на инструкцию](https://www.howtogeek.com/devops/how-to-install-docker-and-docker-compose-on-linux/)
 
 ## Запустите контейнеры
 > При первом запуске будет build images
