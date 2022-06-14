@@ -5,10 +5,10 @@ source .env
 echo 'start git pull'
 git pull
 echo 'build images'
-docker-compose -f docker-compose.yml -f docker-compose.prod.yml build web db
+docker-compose -f docker-compose.prod.yml build web db
 echo 'restart containers'
-docker-compose -f docker-compose.yml -f docker-compose.prod.yml down
-docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+docker-compose -f docker-compose.prod.yml down
+docker-compose -f docker-compose.prod.yml up -d
 echo 'run tests'
 docker exec star_burger_web "python" "manage.py" "test"
 echo 'migrate'
