@@ -15,35 +15,47 @@
 
 Третий интерфейс — это админка. Преимущественно им пользуются программисты при разработке сайта. Также сюда заходит менеджер, чтобы обновить меню ресторанов Star Burger.
 
-## Запуск без Docker
-
-[Ссылка на инструкцию](https://github.com/depocoder/star-burger/blob/main/DEV_README.md)
-
 ## Deploy with Docker & HTTPS
 
 [Ссылка на инструкцию](https://github.com/depocoder/star-burger/blob/main/DOCKER_DEPLOY_README.md)
 
-## Установите [Docker и Docker-compose](https://www.howtogeek.com/devops/how-to-install-docker-and-docker-compose-on-linux/)
+## Запуск с Docker
 
-## Запустите контейнеры
+### Установите Docker и Docker-compose
+
+[Ссылка на инструкцию](https://www.howtogeek.com/devops/how-to-install-docker-and-docker-compose-on-linux/)
+
+### Запустите контейнеры
 > При первом запуске будет build images
 ```shell
 docker-compose -f docker-compose.local.yml up -d
 ```
 
-## Проведите миграции && создайте админ пользователя
+### Проведите миграции
 ```shell
 docker exec star_burger_web "python" "manage.py" "migrate" "--no-input"
+```
+
+### Запуск тестов
+```shell
+docker exec star_burger_web "python" "manage.py" "test"
+```
+
+### Cоздайте админ пользователя
+> Логин от админки - `admin`, пароль - `123456` 
+```shell
 docker exec star_burger_web "python" "manage.py" "create_admin"
 ```
-> Логин от админки - `admin`, пароль - `123456` 
+
 
 
 Теперь можете зайти на страницу  [http://127.0.0.1:80/](http://127.0.0.1:80/)
 
 ![](https://i.imgur.com/AOP6G4c.png)
 
-## Настроить бэкенд: создать файл `.env` в каталоге `star_burger/` со следующими настройками:
+### Настройте бэкенд
+
+создайте файл `.env` в каталоге `star_burger/` со следующими настройками:
 
 - `ROLLBAR_ENVIRONMENT_NAME` — в Rollbar задаёт название окружения или инсталляции сайта.
 - `ROLLBAR_ACCESS_TOKEN` — API ключ от [rollbar](https://rollbar.com/), находится в ваших проектах.
