@@ -51,7 +51,9 @@ docker exec star_burger_web "python" "manage.py" "create_admin"
 
 ![](https://i.imgur.com/AOP6G4c.png)
 
-## Настроить бэкенд: создать файл `.env` в каталоге `star_burger/` со следующими настройками:
+## Настройте бэкенд
+
+создайте файл `.env` в каталоге `star_burger/` со следующими настройками:
 
 - `ROLLBAR_ENVIRONMENT_NAME` — в Rollbar задаёт название окружения или инсталляции сайта.
 - `ROLLBAR_ACCESS_TOKEN` — API ключ от [rollbar](https://rollbar.com/), находится в ваших проектах.
