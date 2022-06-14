@@ -15,10 +15,6 @@
 
 Третий интерфейс — это админка. Преимущественно им пользуются программисты при разработке сайта. Также сюда заходит менеджер, чтобы обновить меню ресторанов Star Burger.
 
-## Запуск без Docker
-
-[Ссылка на инструкцию](https://github.com/depocoder/star-burger/blob/main/DEV_README.md)
-
 ## Deploy with Docker & HTTPS
 
 [Ссылка на инструкцию](https://github.com/depocoder/star-burger/blob/main/DOCKER_DEPLOY_README.md)
