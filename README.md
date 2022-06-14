@@ -19,27 +19,29 @@
 
 [Ссылка на инструкцию](https://github.com/depocoder/star-burger/blob/main/DOCKER_DEPLOY_README.md)
 
-## Установите Docker и Docker-compose
+## Запуск с Docker
+
+### Установите Docker и Docker-compose
 
 [Ссылка на инструкцию](https://www.howtogeek.com/devops/how-to-install-docker-and-docker-compose-on-linux/)
 
-## Запустите контейнеры
+### Запустите контейнеры
 > При первом запуске будет build images
 ```shell
 docker-compose -f docker-compose.local.yml up -d
 ```
 
-## Проведите миграции
+### Проведите миграции
 ```shell
 docker exec star_burger_web "python" "manage.py" "migrate" "--no-input"
 ```
 
-## Запуск тестов
+### Запуск тестов
 ```shell
 docker exec star_burger_web "python" "manage.py" "test"
 ```
 
-## Cоздайте админ пользователя
+### Cоздайте админ пользователя
 > Логин от админки - `admin`, пароль - `123456` 
 ```shell
 docker exec star_burger_web "python" "manage.py" "create_admin"
@@ -51,7 +53,7 @@ docker exec star_burger_web "python" "manage.py" "create_admin"
 
 ![](https://i.imgur.com/AOP6G4c.png)
 
-## Настройте бэкенд
+### Настройте бэкенд
 
 создайте файл `.env` в каталоге `star_burger/` со следующими настройками:
 
