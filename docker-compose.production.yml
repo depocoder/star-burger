@@ -1,34 +1,67 @@
 version: "3.9"
 
 volumes:
+  frontend_data:
+  media:
+  pg_data:
   letsencrypt_data:
   nginx_confs:
 
-
-
 services:
   web:
+    container_name: star_burger_web
+    build:
+        context: .
+        dockerfile: ./etc/backend/Dockerfile
+    image: "star_burger_web:latest"
+    environment:
+      - POSTGRES_HOST=db
+      - STATIC_DIR_NAME=frontend
+      - DEBUG=false
+    volumes:
+      - frontend_data:/code/frontend
+      - media:/code/media
+    depends_on:
+      - db
     restart: always
     env_file:
       - .env
-    environment:
-      - DEBUG=false
 
   db:
+    container_name: star_burger_db
     env_file:
       - .env
     restart: always
+    image: "postgres:14.3-bullseye"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=star_burger
 
   frontend:
+    container_name: star_burger_frontend
     restart: on-failure
+    build:
+      context: .
+      dockerfile: ./etc/frontend/Dockerfile
+    image: star_burger_frontend:latest
+    volumes:
+      - frontend_data:/frontend
 
   nginx:
+    container_name: star_burger_nginx
     image: "depocoder/nginx_certbot:0.1"
     build:
       context: .
       dockerfile: ./etc/nginx/Dockerfile
     ports:
+      - "80:80"
       - "443:443"
     volumes:
+      - frontend_data:/frontend
+      - media:/media
       - letsencrypt_data:/etc/letsencrypt/
       - nginx_confs:/etc/nginx/sites-available
+    depends_on:
+      - web
+
