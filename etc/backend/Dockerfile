@@ -1,4 +1,6 @@
 FROM python:3.9
+# I don't use 3.9-slim-buster
+# because slim-buster hasn't had python3-dev and other debs for postgres engine
 
 ENV POETRY_VERSION=1.1.13 \
     POETRY_VIRTUALENVS_CREATE=false \
