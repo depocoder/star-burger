@@ -1,6 +1,0 @@
-# Содержимое файла /etc/systemd/system/certbot-renewal.service
-[Unit]
-Description=Certbot Renewal
-
-[Service]
-ExecStart=/usr/bin/certbot renew --force-renewal --post-hook "systemctl reload nginx.service"
