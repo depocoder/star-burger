@@ -10,11 +10,11 @@ services:
   web:
     container_name: star_burger_web
     build:
-        context: .
-        dockerfile: ./etc/backend/Dockerfile
-    command: bash -c 'python manage.py collectstatic --no-input &&
-      python -m gunicorn -b 0.0.0.0:8080 star_burger.wsgi:application'
+        context: backend
+    command: >
+      python -m gunicorn -b 127.0.0.1:8080 star_burger.wsgi:application
     image: "star_burger_web:latest"
+    network_mode: "host"
     environment:
       - POSTGRES_HOST=db
       - STATIC_DIR_NAME=frontend
@@ -22,7 +22,7 @@ services:
       - DEBUG=true
     volumes:
       - frontend_data:/code/frontend
-      - media:/code/media
+      - ./media:/code/media
     depends_on:
       - db
 
@@ -39,20 +39,7 @@ services:
   frontend:
     container_name: star_burger_frontend
     build:
-      context: .
-      dockerfile: ./etc/frontend/Dockerfile
+      context: frontend
     image: star_burger_frontend:latest
     volumes:
       - frontend_data:/frontend
-
-  nginx:
-    container_name: star_burger_nginx
-    image: "nginx:stable"
-    ports:
-      - "80:80"
-    volumes:
-      - frontend_data:/frontend
-      - media:/media
-      - ./etc/nginx/conf.d:/etc/nginx/conf.d
-    depends_on:
-      - web

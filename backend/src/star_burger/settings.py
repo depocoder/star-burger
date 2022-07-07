@@ -21,7 +21,7 @@ ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', ['127.0.0.1', 'localhost', 'testserver
 
 INSTALLED_APPS = [
     'foodcartapp.apps.FoodcartappConfig',
-    'restaurateur.apps.RestaurateurConfig',
+    'restaurateurapp.apps.RestaurateurConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -31,11 +31,8 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'phonenumber_field',
     'rest_framework',
-    'distances',
+    'distancesapp',
 ]
-
-LOCAL_REPO = Repo(path=BASE_DIR)
-LOCAL_BRANCH = LOCAL_REPO.active_branch.name
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -54,7 +51,6 @@ if ROLLBAR_ACCESS_TOKEN:
         'access_token': ROLLBAR_ACCESS_TOKEN,
         'environment': env('ROLLBAR_ENVIRONMENT_NAME', 'unknown'),
         'root': BASE_DIR,
-        'branch': LOCAL_BRANCH,
     }
     MIDDLEWARE.append('rollbar.contrib.django.middleware.RollbarNotifierMiddlewareExcluding404')
 

@@ -11,8 +11,8 @@ from django.conf import settings
 from geopy.distance import distance
 
 from foodcartapp.models import Product, Restaurant, Order, ProductInOrder
-from distances.models import Place
-from distances.yandex_api import fetch_coordinates
+from distancesapp.models import Place
+from distancesapp.yandex_api import fetch_coordinates
 
 
 class Login(forms.Form):
@@ -50,7 +50,7 @@ class LoginView(View):
             if user:
                 login(request, user)
                 if user.is_staff:  # FIXME replace with specific permission
-                    return redirect("restaurateur:RestaurantView")
+                    return redirect("restaurateurapp:RestaurantView")
                 return redirect("start_page")
 
         return render(request, "login.html", context={
@@ -60,14 +60,14 @@ class LoginView(View):
 
 
 class LogoutView(auth_views.LogoutView):
-    next_page = reverse_lazy('restaurateur:login')
+    next_page = reverse_lazy('restaurateurapp:login')
 
 
 def is_manager(user):
     return user.is_staff  # FIXME replace with specific permission
 
 
-@user_passes_test(is_manager, login_url='restaurateur:login')
+@user_passes_test(is_manager, login_url='restaurateurapp:login')
 def view_products(request):
     restaurants = list(Restaurant.objects.order_by('name'))
     products = list(Product.objects.prefetch_related('menu_products'))
@@ -91,14 +91,14 @@ def view_products(request):
     })
 
 
-@user_passes_test(is_manager, login_url='restaurateur:login')
+@user_passes_test(is_manager, login_url='restaurateurapp:login')
 def view_restaurants(request):
     return render(request, template_name="restaurants_list.html", context={
         'restaurants': Restaurant.objects.all(),
     })
 
 
-@user_passes_test(is_manager, login_url='restaurateur:login')
+@user_passes_test(is_manager, login_url='restaurateurapp:login')
 def view_orders(request):
     restaurants = Restaurant.objects.prefetch_products()
 
