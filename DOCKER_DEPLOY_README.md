@@ -27,18 +27,18 @@ server {
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_pass http://web:8080/;
+        proxy_pass http://127.0.0.1:8080/;
     }
 
     location /media/ {
-        alias /media/;
+        alias {your_path_to_media}/media/;
     }
 
     location /static/ {
-        alias /frontend/;
+        alias {your_path_to_frontend}/frontend/;
     }
 
-} 
+}
 ```
 
 Создайте сертификаты. Скопируйте команду, указав свою почту и свой домен:
@@ -52,10 +52,10 @@ certbot --nginx --email ma1n.py@ya.ru --agree-tos --no-eff-email -d starburger.d
 docker exec star_burger_web "python" "manage.py" "migrate" "--no-input"
 ```
 
-## Как быстро обновить код на сервере?
+## Как быстро обновить код на развернутом сервере?
 В репозитории есть заготовка для быстрого обновления кода.
 ```shell
-./docker_deploy.sh
+./docker_restart.sh
 ```
 
 ## Запуск тестов
