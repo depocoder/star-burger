@@ -14,6 +14,6 @@ COPY poetry.lock pyproject.toml /code/
 
 RUN poetry install
 
-COPY . /code
+COPY src/ /code
 
-CMD ["python", "-m", "gunicorn", "-b", "0.0.0.0:8080", "star_burger.wsgi:application"]
+CMD ["python", "-m", "gunicorn", "-b", "127.0.0.1:8080", "star_burger.wsgi:application"]

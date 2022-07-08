@@ -3,10 +3,10 @@ from django.shortcuts import redirect
 
 from . import views
 
-app_name = "restaurateur"
+app_name = "restaurateurapp"
 
 urlpatterns = [
-    path('', lambda request: redirect('restaurateur:ProductsView')),
+    path('', lambda request: redirect('restaurateurapp:ProductsView')),
 
     path('products/', views.view_products, name="ProductsView"),
 

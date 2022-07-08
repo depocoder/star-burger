@@ -2,25 +2,24 @@ version: "3.9"
 
 volumes:
   frontend_data:
-  media:
   pg_data:
-  letsencrypt_data:
-  nginx_confs:
 
 services:
   web:
     container_name: star_burger_web
     build:
-        context: .
-        dockerfile: ./etc/backend/Dockerfile
+        context: backend
     image: "star_burger_web:latest"
+    command: "python -m gunicorn -b 0.0.0.0:8080 star_burger.wsgi:application"
+    ports:
+      - 127.0.0.1:8080:8080
     environment:
       - POSTGRES_HOST=db
       - STATIC_DIR_NAME=frontend
       - DEBUG=false
     volumes:
       - frontend_data:/code/frontend
-      - media:/code/media
+      - ./media:/code/media
     depends_on:
       - db
     restart: always
@@ -42,26 +41,7 @@ services:
     container_name: star_burger_frontend
     restart: on-failure
     build:
-      context: .
-      dockerfile: ./etc/frontend/Dockerfile
+      context: frontend
     image: star_burger_frontend:latest
     volumes:
       - frontend_data:/frontend
-
-  nginx:
-    container_name: star_burger_nginx
-    image: "depocoder/nginx_certbot:0.1"
-    build:
-      context: .
-      dockerfile: ./etc/nginx/Dockerfile
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - frontend_data:/frontend
-      - media:/media
-      - letsencrypt_data:/etc/letsencrypt/
-      - nginx_confs:/etc/nginx/sites-available
-    depends_on:
-      - web
-
