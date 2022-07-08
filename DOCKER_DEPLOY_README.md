@@ -93,7 +93,7 @@ WantedBy=multi-user.target
 # Содержимое файла /etc/systemd/system/starburger-clearsessions.service
 [Service]
 WorkingDirectory="CHANGE ME TO YOUR PATH"
-ExecStart=/usr/local/bin/poetry run python manage.py clearsessions
+ExecStart=docker exec star_burger_web "python" "manage.py" "clearsessions"
 
 [Install]
 WantedBy=multi-user.target
