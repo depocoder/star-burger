@@ -38,9 +38,7 @@ docker-compose -f docker-compose.local.yml up -d
 sudo apt install nginx-full
 ```
 
-Настройте nginx
-
-[Ссылка на документацию](https://nginx.org/en/docs/)
+Настройте nginx. Если никогда не работали с ним то вот [ссылка на документацию](https://nginx.org/en/docs/).
 
 Создайте конфиг для nginx. Скопируйте пример конфига ниже, указав свой путь до проекта:
 ```
