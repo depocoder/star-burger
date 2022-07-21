@@ -66,8 +66,8 @@ server {
 
 Соберите статику и скопируйте её в папку проекта
 ```shell
-docker exec star_burger_web python manage.py collectstatic --no-input
-docker cp star_burger_web:/code/frontend ./static
+docker cp star_burger_web:/code/staticfiles/ ./static/
+docker cp star_burger_frontend:/static/bundles/ ./static/
 ```
 
 Проведите миграции:
@@ -102,7 +102,6 @@ docker exec -it star_burger_web python manage.py createsuperuser
 - `YANDEX_API_KEY` — API ключ от яндекс гео-кодера;
 - *`SECRET_KEY` — Секретный ключ проекта. Он отвечает за шифрование на сайте/ Например, им зашифрованы все пароли на вашем сайте;
 - `ALLOWED_HOSTS` — [см; документацию Django](https://docs.djangoproject.com/en/3.1/ref/settings/#allowed-hosts).
-- `STATIC_DIR_NAME` - Название директории с статикой;
 
 ## Запуск тестов
 ```shell
