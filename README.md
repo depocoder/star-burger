@@ -66,18 +66,18 @@ server {
 
 Соберите статику и скопируйте её в папку проекта
 ```shell
-docker exec star_burger_web "python" "manage.py" "collectstatic" "--no-input"
+docker exec star_burger_web python manage.py collectstatic --no-input
 docker cp star_burger_web:/code/frontend ./static
 ```
 
 Проведите миграции:
 ```shell
-docker exec star_burger_web "python" "manage.py" "migrate" "--no-input"
+docker exec star_burger_web python manage.py migrate --no-input
 ```
 
 Cоздайте админ пользователя:
 ```shell
-docker exec star_burger_web "python" "manage.py" "create_admin"
+docker exec star_burger_web python manage.py create_admin
 ```
 
 Логин от админки - `admin`, пароль - `123456`
@@ -104,7 +104,7 @@ docker exec star_burger_web "python" "manage.py" "create_admin"
 
 ## Запуск тестов
 ```shell
-docker exec star_burger_web "python" "manage.py" "test"
+docker exec star_burger_web python manage.py test
 ```
 
 За основу был взят код проекта [FoodCart](https://github.com/Saibharath79/FoodCart).

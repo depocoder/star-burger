@@ -50,7 +50,7 @@ server {
 
 Проведите миграции
 ```shell
-docker exec star_burger_web "python" "manage.py" "migrate" "--no-input"
+docker exec star_burger_web python manage.py migrate --no-input
 ```
 
 ## Автообновление сертификатов Certbot
@@ -121,7 +121,7 @@ WantedBy=multi-user.target
 
 ## Запуск тестов
 ```shell
-docker exec star_burger_web "python" "manage.py" "test"
+docker exec star_burger_web python manage.py test
 ```
 
 
