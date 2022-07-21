@@ -94,8 +94,8 @@ docker exec -it star_burger_web python manage.py createsuperuser
 
 - `ROLLBAR_ENVIRONMENT_NAME` — в Rollbar задаёт название окружения или инсталляции сайта;
 - `ROLLBAR_ACCESS_TOKEN` — API ключ от [rollbar](https://rollbar.com/), находится в ваших проектах;
-- `POSTGRES_USER` — Логин от postgres user'а;
-- `POSTGRES_PASSWORD` — Пароль от postgres user'а;
+- *`POSTGRES_USER` — Логин от postgres user'а;
+- *`POSTGRES_PASSWORD` — Пароль от postgres user'а;
 - `POSTGRES_HOST` — Адрес от postgres;
 - `POSTGRES_PORT` — Порт от postgres;
 - `DEBUG` — Дебаг-режим; Поставьте `False`;
