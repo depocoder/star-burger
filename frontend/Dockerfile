@@ -4,7 +4,7 @@ WORKDIR /frontend
 
 COPY package.json package-lock.json /frontend/
 
-RUN npm install --also=dev && npm audit fix
+RUN npm ci
 
 COPY bundles-src/ /frontend/bundles-src/
 
