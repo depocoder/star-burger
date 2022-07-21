@@ -77,7 +77,7 @@ docker exec star_burger_web python manage.py migrate --no-input
 
 Cоздайте админ пользователя:
 ```shell
-docker exec star_burger_web python manage.py create_admin
+docker exec -it star_burger_web python manage.py createsuperuser
 ```
 
 Логин от админки - `admin`, пароль - `123456`
