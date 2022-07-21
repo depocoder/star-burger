@@ -30,7 +30,7 @@
 Запустите контейнеры:
 
 ```shell
-docker-compose -f docker-compose.local.yml up -d
+docker-compose -f docker-compose.local.yml up
 ```
 
 Установите nginx
@@ -66,7 +66,7 @@ server {
 
 Соберите статику и скопируйте её в папку проекта
 ```shell
-docker exec star_burger_web "python" "manage.py" "collecstatic" "--no-input"
+docker exec star_burger_web "python" "manage.py" "collectstatic" "--no-input"
 docker cp star_burger_web:/code/frontend ./static
 ```
 
