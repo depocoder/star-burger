@@ -2,7 +2,7 @@ version: "3.9"
 
 volumes:
   frontend_data:
-  pg_data:
+  production_pg_data:
 
 services:
   web:
@@ -33,7 +33,7 @@ services:
     restart: always
     image: "postgres:14.3-bullseye"
     volumes:
-      - pg_data:/var/lib/postgresql/data
+      - production_pg_data:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=star_burger
 
