@@ -84,7 +84,7 @@ OnUnitActiveSec=1w
 WantedBy=multi-user.target
 ```
 
-## Авто очистка django sessions
+## Автоочистка django sessions
 
 Рекомендую воспользоваться systemd.
 
