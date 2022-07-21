@@ -5,7 +5,9 @@ source .env
 echo 'start git pull'
 git pull
 echo 'build images'
-docker-compose -f docker-compose.production.yml build web db
+# todo frotend
+# Todo docker run
+docker-compose -f docker-compose.production.yml build web
 echo 'restart containers'
 docker-compose -f docker-compose.production.yml down
 docker-compose -f docker-compose.production.yml up -d
