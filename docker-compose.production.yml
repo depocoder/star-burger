@@ -44,4 +44,4 @@ services:
       context: frontend
     image: star_burger_frontend:latest
     volumes:
-      - frontend_data:/frontend
+      - frontend_data:/static
