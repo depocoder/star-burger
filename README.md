@@ -66,8 +66,8 @@ server {
 
 Соберите статику и скопируйте её в папку проекта
 ```shell
-docker cp star_burger_web:/code/staticfiles/ ./static/
-docker cp star_burger_frontend:/static/bundles/ ./static/
+docker cp star_burger_web:/code/staticfiles/. ./static/
+docker cp star_burger_frontend:/static/. ./static/
 ```
 
 Проведите миграции:

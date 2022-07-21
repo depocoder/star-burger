@@ -1,7 +1,6 @@
 version: "3.9"
 
 volumes:
-  frontend_data:
   production_pg_data:
 
 services:
@@ -17,7 +16,6 @@ services:
       - POSTGRES_HOST=db
       - DEBUG=false
     volumes:
-      - frontend_data:/code/frontend
       - ./media:/code/media
     depends_on:
       - db
@@ -35,12 +33,3 @@ services:
       - production_pg_data:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=star_burger
-
-  frontend:
-    container_name: star_burger_frontend
-    restart: on-failure
-    build:
-      context: frontend
-    image: star_burger_frontend:latest
-    volumes:
-      - frontend_data:/static

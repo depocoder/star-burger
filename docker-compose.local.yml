@@ -1,7 +1,6 @@
 version: "3.9"
 
 volumes:
-  frontend_data:
   local_pg_data:
 
 
@@ -20,7 +19,6 @@ services:
       - SECRET_KEY=DebugSecretKey
       - DEBUG=true
     volumes:
-      - frontend_data:/code/frontend
       - ./media:/code/media
     depends_on:
       - db
