@@ -82,7 +82,7 @@ docker exec star_burger_web python manage.py create_admin
 
 Логин от админки - `admin`, пароль - `123456`
 
-Теперь можете зайти на страницу  [http://127.0.0.1:80/](http://127.0.0.1:80/).
+Теперь можете зайти на страницу  [http://127.0.0.1/](http://127.0.0.1/).
 
 ![](https://i.imgur.com/AOP6G4c.png)
 
