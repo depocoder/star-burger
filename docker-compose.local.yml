@@ -9,7 +9,7 @@ services:
     container_name: star_burger_web
     build:
         context: backend
-    command: python -m gunicorn -b 0.0.0.0:8080 star_burger.wsgi:application
+    command: python -m gunicorn -b 0.0.0.0:8080 --reload star_burger.wsgi:application
     image: "star_burger_web:latest"
     ports:
       - 127.0.0.1:8080:8080
@@ -20,6 +20,8 @@ services:
       - DEBUG=true
     volumes:
       - ./media:/code/media
+      - /code/staticfiles
+      - ./backend/src/.:/code
     depends_on:
       - db
 
