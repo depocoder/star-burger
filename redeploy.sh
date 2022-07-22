@@ -6,15 +6,15 @@ echo 'start git pull'
 git pull
 echo 'build images'
 docker build frontend/ -t star_burger_frontend
-docker-compose -f docker-compose.production.yml build web
+docker-compose -f docker-compose.production.web.yml build web
 echo 'copy static'
 docker cp star_burger_web:/code/staticfiles/. ./static/
 docker cp star_burger_frontend:/frontend/bundles/. ./static/
 echo 'run tests'
 docker run star_burger_web python manage.py test
-echo 'restart containers'
-docker-compose -f docker-compose.production.yml down
-docker-compose -f docker-compose.production.yml up -d
+echo 'restart web'
+docker-compose -f docker-compose.production.web.yml down
+docker-compose -f docker-compose.production.web.yml up -d
 echo 'migrate'
 docker exec star_burger_web python manage.py migrate --no-input
 

@@ -11,7 +11,7 @@
 Запустите контейнеры
 
 ```shell
-docker-compose -f docker-compose.production.yml up -d
+docker-compose -f docker-compose.production.web.yml -f docker-compose.production.db.yml up -d
 ```
 
 Настройте nginx. Если никогда не работали с ним то вот [ссылка на документацию](https://nginx.org/en/docs/).
