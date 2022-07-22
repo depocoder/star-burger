@@ -14,7 +14,7 @@ services:
       - POSTGRES_USER=${POSTGRES_USER:?err}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?err}
       - SECRET_KEY=${SECRET_KEY:?err}
-      - POSTGRES_HOST=${POSTGRES_HOST:db}
+      - POSTGRES_HOST=${POSTGRES_HOST:-db}
     volumes:
       - ./media:/code/media
     restart: always
