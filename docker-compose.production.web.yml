@@ -10,11 +10,11 @@ services:
     ports:
       - 127.0.0.1:8080:8080
     environment:
-      - POSTGRES_HOST=db
       - DEBUG=false
       - POSTGRES_USER=${POSTGRES_USER:?err}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?err}
       - SECRET_KEY=${SECRET_KEY:?err}
+      - POSTGRES_HOST=${POSTGRES_HOST:db}
     volumes:
       - ./media:/code/media
     restart: always
