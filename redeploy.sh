@@ -8,10 +8,9 @@ echo 'build images'
 docker build frontend/ -t star_burger_frontend
 docker-compose -f docker-compose.production.web.yml build web
 echo 'run tests'
-# for using manage.py we should use SECRET_KEY
-docker run --network host --env-file ./.env star_burger_web python manage.py test
+docker-compose -f docker-compose.production.web.yml run web python manage.py test
 echo 'restart web'
-docker-compose -f docker-compose.production.web.yml down
+docker stop star_burger_web
 docker-compose -f docker-compose.production.web.yml up -d
 echo 'migrate'
 docker exec star_burger_web python manage.py migrate --no-input
