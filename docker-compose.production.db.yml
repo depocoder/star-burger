@@ -10,8 +10,6 @@ services:
       - .env
     environment:
       - POSTGRES_DB=star_burger
-    ports:
-      - 127.0.0.1:5432:5432
     restart: always
     image: "postgres:14.3-bullseye"
     volumes:
