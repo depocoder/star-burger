@@ -17,8 +17,6 @@ services:
       - SECRET_KEY=${SECRET_KEY:?err}
     volumes:
       - ./media:/code/media
-    depends_on:
-      - db
     restart: always
     env_file:
       - .env
