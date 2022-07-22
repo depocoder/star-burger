@@ -14,3 +14,9 @@ services:
     image: "postgres:14.3-bullseye"
     volumes:
       - production_pg_data:/var/lib/postgresql/data
+
+
+networks:
+  default:
+    name: db_network
+    external: true

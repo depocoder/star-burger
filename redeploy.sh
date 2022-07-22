@@ -10,7 +10,7 @@ docker-compose -f docker-compose.production.web.yml build web
 echo 'run tests'
 docker-compose -f docker-compose.production.web.yml run web python manage.py test
 echo 'restart web'
-docker stop star_burger_web
+docker-compose -f docker-compose.production.web.yml down
 docker-compose -f docker-compose.production.web.yml up -d
 echo 'migrate'
 docker exec star_burger_web python manage.py migrate --no-input

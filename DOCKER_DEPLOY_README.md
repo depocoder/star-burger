@@ -8,6 +8,12 @@
 
 > [ссылка на инструкцию](https://github.com/depocoder/star-burger/blob/main/README.md#%D0%BD%D0%B0%D1%81%D1%82%D1%80%D0%BE%D0%B9%D1%82%D0%B5-%D0%B1%D1%8D%D0%BA%D0%B5%D0%BD%D0%B4)
 
+Создайте external docker network
+
+```shell
+docker network create db_network
+```
+
 Запустите контейнеры
 
 ```shell
