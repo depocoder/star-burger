@@ -15,6 +15,9 @@ services:
     environment:
       - POSTGRES_HOST=db
       - DEBUG=false
+      - POSTGRES_USER=${POSTGRES_USER:?err}
+      - SECRET_KEY=${SECRET_KEY:?err}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?err}
     volumes:
       - ./media:/code/media
     depends_on:
