@@ -15,9 +15,12 @@ docker-compose -f docker-compose.production.web.yml down
 docker-compose -f docker-compose.production.web.yml up -d
 echo 'migrate'
 docker exec star_burger_web python manage.py migrate --no-input
-echo 'copy static'
+echo 'copy static web static'
 docker cp star_burger_web:/code/staticfiles/. ./static/
-docker cp star_burger_frontend:/frontend/bundles/. ./static/
+echo 'copy static frontend static'
+container_id=$(docker create star_burger_frontend)
+docker cp $container_id:/frontend/bundles/. ./static/
+docker rm -v $container_id
 
 echo 'send deploy info to rollbar'
 COMMIT_HAST=$(git rev-parse HEAD)
