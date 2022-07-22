@@ -30,7 +30,7 @@
 Запустите контейнеры:
 
 ```shell
-docker-compose -f docker-compose.local.yml up -d
+docker-compose -f docker-compose.local.yml up
 ```
 
 Установите nginx
@@ -64,25 +64,25 @@ server {
 }
 ```
 
-Соберите статику и скопируйте её в папку проекта
+Скопируйте статику  в папку проекта
 ```shell
-docker exec star_burger_web "python" "manage.py" "collecstatic" "--no-input"
-docker cp star_burger_web:/code/frontend ./static
+docker cp star_burger_web:/code/staticfiles/. ./static/
+docker cp star_burger_frontend:/frontend/bundles/. ./static/
 ```
 
 Проведите миграции:
 ```shell
-docker exec star_burger_web "python" "manage.py" "migrate" "--no-input"
+docker exec star_burger_web python manage.py migrate --no-input
 ```
 
 Cоздайте админ пользователя:
 ```shell
-docker exec star_burger_web "python" "manage.py" "create_admin"
+docker exec -it star_burger_web python manage.py createsuperuser
 ```
 
 Логин от админки - `admin`, пароль - `123456`
 
-Теперь можете зайти на страницу  [http://127.0.0.1:80/](http://127.0.0.1:80/).
+Теперь можете зайти на страницу  [http://127.0.0.1/](http://127.0.0.1/).
 
 ![](https://i.imgur.com/AOP6G4c.png)
 
@@ -90,21 +90,22 @@ docker exec star_burger_web "python" "manage.py" "create_admin"
 
 создайте файл `.env` в каталоге `star_burger/` со следующими настройками:
 
+Все настройки, кроме отмеченных звёздочкой `*` необязательные. Для local окружения можно не настраивать.
+
 - `ROLLBAR_ENVIRONMENT_NAME` — в Rollbar задаёт название окружения или инсталляции сайта;
 - `ROLLBAR_ACCESS_TOKEN` — API ключ от [rollbar](https://rollbar.com/), находится в ваших проектах;
-- `POSTGRES_USER` — Логин от postgres user'а;
-- `POSTGRES_PASSWORD` — Пароль от postgres user'а;
+- *`POSTGRES_USER` — Логин от postgres user'а;
+- *`POSTGRES_PASSWORD` — Пароль от postgres user'а;
 - `POSTGRES_HOST` — Адрес от postgres;
 - `POSTGRES_PORT` — Порт от postgres;
 - `DEBUG` — Дебаг-режим; Поставьте `False`;
 - `YANDEX_API_KEY` — API ключ от яндекс гео-кодера;
-- `SECRET_KEY` — Секретный ключ проекта. Он отвечает за шифрование на сайте/ Например, им зашифрованы все пароли на вашем сайте;
+- *`SECRET_KEY` — Секретный ключ проекта. Он отвечает за шифрование на сайте/ Например, им зашифрованы все пароли на вашем сайте;
 - `ALLOWED_HOSTS` — [см; документацию Django](https://docs.djangoproject.com/en/3.1/ref/settings/#allowed-hosts).
-- `STATIC_DIR_NAME` - Название директории с статикой;
 
 ## Запуск тестов
 ```shell
-docker exec star_burger_web "python" "manage.py" "test"
+docker exec star_burger_web python manage.py test
 ```
 
 За основу был взят код проекта [FoodCart](https://github.com/Saibharath79/FoodCart).

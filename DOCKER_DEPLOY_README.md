@@ -11,7 +11,7 @@
 Запустите контейнеры
 
 ```shell
-docker-compose -f docker-compose.production.yml up -d
+docker-compose -f docker-compose.production.web.yml -f docker-compose.production.db.yml up -d
 ```
 
 Настройте nginx. Если никогда не работали с ним то вот [ссылка на документацию](https://nginx.org/en/docs/).
@@ -50,7 +50,13 @@ server {
 
 Проведите миграции
 ```shell
-docker exec star_burger_web "python" "manage.py" "migrate" "--no-input"
+docker exec star_burger_web python manage.py migrate --no-input
+```
+
+Соберите статику 
+```shell
+docker cp star_burger_web:/code/staticfiles/. ./static/
+docker cp star_burger_frontend:/frontend/bundles/. ./static/
 ```
 
 ## Автообновление сертификатов Certbot
@@ -84,7 +90,7 @@ OnUnitActiveSec=1w
 WantedBy=multi-user.target
 ```
 
-## Авто очистка django sessions
+## Автоочистка django sessions
 
 Рекомендую воспользоваться systemd.
 
@@ -116,12 +122,12 @@ WantedBy=multi-user.target
 ## Как быстро обновить код на развернутом сервере?
 В репозитории есть заготовка для быстрого обновления кода.
 ```shell
-./docker_restart.sh
+./redeploy.sh
 ```
 
 ## Запуск тестов
 ```shell
-docker exec star_burger_web "python" "manage.py" "test"
+docker exec star_burger_web python manage.py test
 ```
 
 
