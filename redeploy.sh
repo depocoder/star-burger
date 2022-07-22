@@ -5,8 +5,11 @@ source .env
 echo 'start git pull'
 git pull
 echo 'build images'
-#docker build frontend/ -t star_burger_frontend
+docker build frontend/ -t star_burger_frontend
 docker-compose -f docker-compose.production.yml build web
+echo 'copy static'
+docker cp star_burger_web:/code/staticfiles/. ./static/
+docker cp star_burger_frontend:/frontend/bundles/. ./static/
 echo 'run tests'
 docker run star_burger_web python manage.py test
 echo 'restart containers'

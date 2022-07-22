@@ -53,6 +53,12 @@ server {
 docker exec star_burger_web python manage.py migrate --no-input
 ```
 
+Соберите статику 
+```shell
+docker cp star_burger_web:/code/staticfiles/. ./static/
+docker cp star_burger_frontend:/frontend/bundles/. ./static/
+```
+
 ## Автообновление сертификатов Certbot
 Сертификаты от certbot действительны 3 месяца, поэтому их надо иногда обновлять.
 

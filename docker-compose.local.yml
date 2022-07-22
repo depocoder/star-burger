@@ -38,6 +38,7 @@ services:
     build:
       context: frontend
     image: star_burger_frontend:latest
+    command: /frontend/node_modules/.bin/parcel watch bundles-src/index.js --dist-dir /frontend/bundles --public-url="./"
     volumes:
-      - frontend_data:/static
-
+      - ./frontend/bundles-src/:/frontend/bundles-src/
+      - ./static/:/frontend/bundles/

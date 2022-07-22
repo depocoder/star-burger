@@ -8,4 +8,4 @@ RUN npm ci
 
 COPY bundles-src/ /frontend/bundles-src/
 
-RUN /frontend/node_modules/.bin/parcel build bundles-src/index.js --dist-dir /static/bundles --public-url="./"
+RUN /frontend/node_modules/.bin/parcel build bundles-src/index.js --dist-dir bundles --public-url="./"
