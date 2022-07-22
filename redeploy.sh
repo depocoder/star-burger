@@ -8,7 +8,8 @@ echo 'build images'
 docker build frontend/ -t star_burger_frontend
 docker-compose -f docker-compose.production.web.yml build web
 echo 'run tests'
-docker run star_burger_web python manage.py test
+# for using manage.py we should use SECRET_KEY
+docker run star_burger_web SECRET_KEY=NOT_IMPORTANT_VALUE python manage.py test
 echo 'restart web'
 docker-compose -f docker-compose.production.web.yml down
 docker-compose -f docker-compose.production.web.yml up -d
