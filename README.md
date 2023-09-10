@@ -19,6 +19,8 @@
 
 [Ссылка на инструкцию.](https://github.com/depocoder/star-burger/blob/main/DOCKER_DEPLOY_README.md)
 
+## Запуск с Docker
+
 Настройте бэкенд:
 
 создайте файл `.env` в каталоге `star_burger/` со следующими настройками:
@@ -36,7 +38,6 @@
 - *`SECRET_KEY` — Секретный ключ проекта. Он отвечает за шифрование на сайте/ Например, им зашифрованы все пароли на вашем сайте;
 - `ALLOWED_HOSTS` — [см; документацию Django](https://docs.djangoproject.com/en/3.1/ref/settings/#allowed-hosts).
 
-## Запуск с Docker
 
 Установите Docker и Docker-compose
 
