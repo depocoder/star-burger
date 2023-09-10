@@ -19,14 +19,6 @@
 
 [Ссылка на инструкцию.](https://github.com/depocoder/star-burger/blob/main/DOCKER_DEPLOY_README.md)
 
-## Запуск с Docker
-
-Установите Docker и Docker-compose
-
-[Ссылка на инструкцию.](https://www.howtogeek.com/devops/how-to-install-docker-and-docker-compose-on-linux/)
-
-Отдельно собирать docker images не надо, их соберет Docker Compose при первом запуске.
-
 Настройте бэкенд:
 
 создайте файл `.env` в каталоге `star_burger/` со следующими настройками:
@@ -43,6 +35,14 @@
 - `YANDEX_API_KEY` — API ключ от яндекс гео-кодера;
 - *`SECRET_KEY` — Секретный ключ проекта. Он отвечает за шифрование на сайте/ Например, им зашифрованы все пароли на вашем сайте;
 - `ALLOWED_HOSTS` — [см; документацию Django](https://docs.djangoproject.com/en/3.1/ref/settings/#allowed-hosts).
+
+## Запуск с Docker
+
+Установите Docker и Docker-compose
+
+[Ссылка на инструкцию.](https://www.howtogeek.com/devops/how-to-install-docker-and-docker-compose-on-linux/)
+
+Отдельно собирать docker images не надо, их соберет Docker Compose при первом запуске.
 
 
 Запустите контейнеры:
