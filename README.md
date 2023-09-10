@@ -27,6 +27,24 @@
 
 Отдельно собирать docker images не надо, их соберет Docker Compose при первом запуске.
 
+Настройте бэкенд:
+
+создайте файл `.env` в каталоге `star_burger/` со следующими настройками:
+
+Все настройки, кроме отмеченных звёздочкой `*` необязательные. Для local окружения можно не настраивать.
+
+- `ROLLBAR_ENVIRONMENT_NAME` — в Rollbar задаёт название окружения или инсталляции сайта;
+- `ROLLBAR_ACCESS_TOKEN` — API ключ от [rollbar](https://rollbar.com/), находится в ваших проектах;
+- *`POSTGRES_USER` — Логин от postgres user'а;
+- *`POSTGRES_PASSWORD` — Пароль от postgres user'а;
+- `POSTGRES_HOST` — Адрес от postgres;
+- `POSTGRES_PORT` — Порт от postgres;
+- `DEBUG` — Дебаг-режим; Поставьте `False`;
+- `YANDEX_API_KEY` — API ключ от яндекс гео-кодера;
+- *`SECRET_KEY` — Секретный ключ проекта. Он отвечает за шифрование на сайте/ Например, им зашифрованы все пароли на вашем сайте;
+- `ALLOWED_HOSTS` — [см; документацию Django](https://docs.djangoproject.com/en/3.1/ref/settings/#allowed-hosts).
+
+
 Запустите контейнеры:
 
 ```shell
@@ -80,28 +98,10 @@ Cоздайте админ пользователя:
 docker exec -it star_burger_web python manage.py createsuperuser
 ```
 
-Логин от админки - `admin`, пароль - `123456`
-
 Теперь можете зайти на страницу  [http://127.0.0.1/](http://127.0.0.1/).
 
 ![](https://i.imgur.com/AOP6G4c.png)
 
-Настройте бэкенд:
-
-создайте файл `.env` в каталоге `star_burger/` со следующими настройками:
-
-Все настройки, кроме отмеченных звёздочкой `*` необязательные. Для local окружения можно не настраивать.
-
-- `ROLLBAR_ENVIRONMENT_NAME` — в Rollbar задаёт название окружения или инсталляции сайта;
-- `ROLLBAR_ACCESS_TOKEN` — API ключ от [rollbar](https://rollbar.com/), находится в ваших проектах;
-- *`POSTGRES_USER` — Логин от postgres user'а;
-- *`POSTGRES_PASSWORD` — Пароль от postgres user'а;
-- `POSTGRES_HOST` — Адрес от postgres;
-- `POSTGRES_PORT` — Порт от postgres;
-- `DEBUG` — Дебаг-режим; Поставьте `False`;
-- `YANDEX_API_KEY` — API ключ от яндекс гео-кодера;
-- *`SECRET_KEY` — Секретный ключ проекта. Он отвечает за шифрование на сайте/ Например, им зашифрованы все пароли на вашем сайте;
-- `ALLOWED_HOSTS` — [см; документацию Django](https://docs.djangoproject.com/en/3.1/ref/settings/#allowed-hosts).
 
 ## Запуск тестов
 ```shell
